@@ -5,19 +5,22 @@
       {
         "text": "Notepad",
         "target": "ahk_exe notepad.exe",
-        "keys": "Hello from AHK!{Enter}"
+        "keys": "Hello from AHK!{Enter}",
+        "style": "btn btn-primary"
       },
       {
         "text": "Calculator",
         "target": "ahk_exe calc.exe",
-        "keys": ""
+        "keys": "",
+        "style": "btn btn-outline-danger"
       }
     ],
     [
       {
         "text": "Browser",
         "target": "ahk_exe chrome.exe",
-        "keys": "https://www.google.com{Enter}"
+        "keys": "https://www.google.com{Enter}",
+        "style": "btn btn-success"
       }
     ]
   ]

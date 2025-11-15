@@ -19,9 +19,6 @@ MyWindow := WebViewGui("+Resize -Caption",, WebViewSettings)
 MyWindow.OnEvent("Close", (*) => ExitApp())
 MyWindow.Navigate("Pages/index.html")
 MyWindow.Debug()
-MyWindow.AddCallbackToScript("Tooltip", WebTooltipEvent)
-MyWindow.AddCallbackToScript("SubmitForm", SubmitFormHandler)
-MyWindow.AddCallbackToScript("CopyGlyphCode", CopyGlyphCodeEvent)
 MyWindow.AddHostObjectToScript("ButtonClick", {func: WebButtonClickEvent})
 MyWindow.Show("w800 h600")
 ;///////////////////////////////////////////////////////////////////////////////////////////
@@ -58,28 +55,6 @@ WebButtonClickEvent(button) {
 	MsgBox(button)
 }
 
-CopyGlyphCodeEvent(WebView, Title) {
-	GlyphCode := "<span class='glyphicon glyphicon-" Title "' aria-hidden='true'></span>"
-	MsgBox(A_Clipboard := GlyphCode, "OuterHTML Copied to Clipboard")
-}
-
-WebTooltipEvent(WebView, Msg) {
-	ToolTip(Msg)
-	SetTimer((*) => ToolTip(), -1000)
-}
-
-SubmitFormHandler(WebView, FormData) {
-	Output := ""
-	Output .= "Email: " FormData.Email "`n"
-	Output .= "Password: " FormData.Password "`n"
-	Output .= "Address: " FormData.Address "`n"
-	Output .= "Address2: " FormData.Address2 "`n"
-	Output .= "City: " FormData.City "`n"
-	Output .= "State: " FormData.State "`n"
-	Output .= "Zip: " FormData.Zip "`n"
-	try Output .=  "Check: " FormData.Check "`n" ;Only works when checked
-	MsgBox(Output)
-}
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
 ;Resources for Compiled Scripts
