@@ -1,0 +1,24 @@
+{
+  "name": "S.P.A.M.",
+  "buttons": [
+    [
+      {
+        "text": "Notepad",
+        "target": "ahk_exe notepad.exe",
+        "keys": "Hello from AHK!{Enter}"
+      },
+      {
+        "text": "Calculator",
+        "target": "ahk_exe calc.exe",
+        "keys": ""
+      }
+    ],
+    [
+      {
+        "text": "Browser",
+        "target": "ahk_exe chrome.exe",
+        "keys": "https://www.google.com{Enter}"
+      }
+    ]
+  ]
+}
