@@ -67,7 +67,7 @@ WebButtonClickEvent(button) {
 ;///////////////////////////////////////////////////////////////////////////////////////////
 LoadAndSendConfigs() {
     ; Load main config
-    configFile := FileOpen("configs/config.json", "r")
+    configFile := FileOpen("configs/config.json", "r", "UTF-8")
     configContent := configFile.Read()
     configFile.Close()
     
@@ -75,7 +75,7 @@ LoadAndSendConfigs() {
     charConfigs := []
     loop files, "configs/*.json" {
         if (A_LoopFileName != "config.json") {
-            file := FileOpen(A_LoopFilePath, "r")
+            file := FileOpen(A_LoopFilePath, "r", "UTF-8")
             content := file.Read()
             file.Close()
             charConfigs.Push(content)
@@ -90,7 +90,7 @@ SendConfigData() {
     global MyWindow
     
     ; Load main config
-    configFile := FileOpen("configs/config.json", "r")
+    configFile := FileOpen("configs/config.json", "r", "UTF-8")
     configContent := configFile.Read()
     configFile.Close()
     
@@ -100,7 +100,7 @@ SendConfigData() {
     charConfigs := []
     loop files, "configs/*.json" {
         if (A_LoopFileName != "config.json") {
-            file := FileOpen(A_LoopFilePath, "r")
+            file := FileOpen(A_LoopFilePath, "r", "UTF-8")
             content := file.Read()
             file.Close()
             charConfigs.Push(content)

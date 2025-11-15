@@ -3,13 +3,13 @@
   "buttons": [
     [
       {
-        "text": "Notepad",
+        "text": "Думать",
         "target": "ahk_exe notepad.exe",
         "keys": "Hello from AHK!{Enter}",
         "style": "btn btn-primary"
       },
       {
-        "text": "Calculator",
+        "text": "Бипать",
         "target": "ahk_exe calc.exe",
         "keys": "",
         "style": "btn btn-outline-danger"
@@ -17,7 +17,7 @@
     ],
     [
       {
-        "text": "Browser",
+        "text": "Бупать",
         "target": "ahk_exe chrome.exe",
         "keys": "https://www.google.com{Enter}",
         "style": "btn btn-success"
