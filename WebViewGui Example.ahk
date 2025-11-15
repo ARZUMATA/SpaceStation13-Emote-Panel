@@ -4,6 +4,9 @@
 #SingleInstance Force
 #Include Lib\WebViewToo.ahk
 GroupAdd("ScriptGroup", "ahk_pid" DllCall("GetCurrentProcessId"))
+
+; Configuration
+CONFIG_LOAD_DELAY := 500  ; milliseconds to wait before loading configs
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
 ;Create the WebViewGui
@@ -18,9 +21,12 @@ if (A_IsCompiled) {
 MyWindow := WebViewGui("+Resize -Caption",, WebViewSettings)
 MyWindow.OnEvent("Close", (*) => ExitApp())
 MyWindow.Navigate("Pages/index.html")
-MyWindow.Debug()
+; MyWindow.Debug()
 MyWindow.AddHostObjectToScript("ButtonClick", {func: WebButtonClickEvent})
 MyWindow.Show("w800 h600")
+
+; Load configs and send to web
+LoadAndSendConfigs()
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
 ;Hotkeys
@@ -53,6 +59,62 @@ F3:: {
 ;///////////////////////////////////////////////////////////////////////////////////////////
 WebButtonClickEvent(button) {
 	MsgBox(button)
+}
+
+;///////////////////////////////////////////////////////////////////////////////////////////
+
+;Config Loading Functions
+;///////////////////////////////////////////////////////////////////////////////////////////
+LoadAndSendConfigs() {
+    ; Load main config
+    configFile := FileOpen("configs/config.json", "r")
+    configContent := configFile.Read()
+    configFile.Close()
+    
+    ; Load character configs
+    charConfigs := []
+    loop files, "configs/*.json" {
+        if (A_LoopFileName != "config.json") {
+            file := FileOpen(A_LoopFilePath, "r")
+            content := file.Read()
+            file.Close()
+            charConfigs.Push(content)
+        }
+    }
+    
+    ; Send configs to web with a delay to ensure page is loaded
+    SetTimer SendConfigData, -CONFIG_LOAD_DELAY
+}
+
+SendConfigData() {
+    global MyWindow
+    
+    ; Load main config
+    configFile := FileOpen("configs/config.json", "r")
+    configContent := configFile.Read()
+    configFile.Close()
+    
+    MyWindow.PostWebMessageAsString("{`"type`":`"config`",`"data`":" configContent "}")
+    
+    ; Load and send character configs
+    charConfigs := []
+    loop files, "configs/*.json" {
+        if (A_LoopFileName != "config.json") {
+            file := FileOpen(A_LoopFilePath, "r")
+            content := file.Read()
+            file.Close()
+            charConfigs.Push(content)
+        }
+    }
+    
+    ; Build charConfigs array string
+    charConfigsStr := ""
+    for i, config in charConfigs {
+        if (i > 1)
+            charConfigsStr .= ","
+        charConfigsStr .= config
+    }
+    MyWindow.PostWebMessageAsString("{`"type`":`"charConfigs`",`"data`":[" charConfigsStr "]}")
 }
 
 ;///////////////////////////////////////////////////////////////////////////////////////////
