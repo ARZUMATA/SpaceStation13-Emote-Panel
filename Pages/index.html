@@ -15,6 +15,10 @@
 		<link href="Bootstrap/sidebars.css" rel="stylesheet">
 		<link href="Bootstrap/bootstrap.min.css" rel="stylesheet">
 
+		<!-- Custom Colors -->
+		<link href="custom-colors.css" rel="stylesheet">
+		<!-- Custom Colors End -->
+
 		<link rel="icon" href="data:image/svg+xml," />
 
 		<style>
@@ -183,39 +187,39 @@
 			// Handle messages from AHK
 			window.addEventListener('DOMContentLoaded', function() {
 				window.chrome.webview.addEventListener('message', function(event) {
-				try {
-					// Try parsing as JSON first
-					let msg;
-					if (typeof event.data === 'string') {
-					msg = JSON.parse(event.data);
-					} else {
-					msg = event.data;
+					try {
+						// Try parsing as JSON first
+						let msg;
+						if (typeof event.data === 'string') {
+							msg = JSON.parse(event.data);
+						} else {
+							msg = event.data;
+						}
+						
+						console.log("Received message:", msg);
+						
+						if (msg.type === "config") {
+							// Store main config
+							window.mainConfig = msg.data;
+							console.log("Main config loaded:", window.mainConfig);
+						} 
+						else if (msg.type === "charConfigs") {
+							// Process character configs
+							msg.data.forEach(charConfig => {
+							window.characterConfigs[charConfig.name] = charConfig;
+							});
+							console.log("Character configs loaded:", window.characterConfigs);
+							// Update sidebar with character names
+							updateSidebarWithCharacters();
+							// Create tab panes for each character
+							createCharacterTabPanes();
+						}
+					} catch (e) {
+						console.error("Error processing message:", e, event.data);
 					}
-					
-					console.log("Received message:", msg);
-					
-					if (msg.type === "config") {
-					// Store main config
-					window.mainConfig = msg.data;
-					console.log("Main config loaded:", window.mainConfig);
-					} 
-					else if (msg.type === "charConfigs") {
-					// Process character configs
-					msg.data.forEach(charConfig => {
-						window.characterConfigs[charConfig.name] = charConfig;
-					});
-					console.log("Character configs loaded:", window.characterConfigs);
-					// Update sidebar with character names
-					updateSidebarWithCharacters();
-					// Create tab panes for each character
-					createCharacterTabPanes();
-					}
-				} catch (e) {
-					console.error("Error processing message:", e, event.data);
-				}
 				});
 			});
-
+		
 			function updateSidebarWithCharacters() {
 				const sidebar = document.querySelector('ul[role="tablist"]');
 				if (!sidebar) return;
@@ -227,20 +231,20 @@
 				// Add character tabs
 				let index = 1;
 				for (const charName in window.characterConfigs) {
-				const tabId = `v-pills-character-${index}`;
-				const navItem = document.createElement('li');
-				navItem.className = 'nav-item character-tab';
-				navItem.innerHTML = `
+					const tabId = `v-pills-character-${index}`;
+					const navItem = document.createElement('li');
+					navItem.className = 'nav-item character-tab';
+					navItem.innerHTML = `
 					<a class="nav-link link-body-emphasis" data-bs-toggle="pill" role="tab" 
-					href="#${tabId}" id="${tabId}-tab" aria-controls="${tabId}" aria-selected="false">
-					<span class="nav-text">${charName}</span>
+						href="#${tabId}" id="${tabId}-tab" aria-controls="${tabId}" aria-selected="false">
+						<span class="nav-text">${charName}</span>
 					</a>
-				`;
-				sidebar.appendChild(navItem);
-				index++;
+					`;
+					sidebar.appendChild(navItem);
+					index++;
 				}
 			}
-
+		
 			function createCharacterTabPanes() {
 				const tabContent = document.getElementById('v-pills-tabContent');
 				if (!tabContent) return;
@@ -249,59 +253,66 @@
 				const existingPanes = document.querySelectorAll('.character-pane');
 				existingPanes.forEach(pane => pane.remove());
 				
+				// Get button dimensions from config or use defaults
+				const buttonWidth = window.mainConfig.buttonWidth || 90;
+				const buttonHeight = window.mainConfig.buttonHeight || 25;
+				const buttonSpacing = window.mainConfig.buttonSpacing || 5;
+				
 				// Create tab panes for each character
 				let index = 1;
 				for (const charName in window.characterConfigs) {
-				const charConfig = window.characterConfigs[charName];
-				const tabId = `v-pills-character-${index}`;
-				
-				const tabPane = document.createElement('div');
-				tabPane.className = 'tab-pane fade character-pane';
-				tabPane.id = tabId;
-				tabPane.setAttribute('role', 'tabpanel');
-				tabPane.setAttribute('aria-labelledby', `${tabId}-tab`);
-				
-				// Generate buttons based on character config
-				let buttonsHTML = `<div class="tab-container"><h1>${charName}</h1>`;
-				
-				// Create buttons for each row
-				charConfig.buttons.forEach((row, rowIndex) => {
-					buttonsHTML += '<div class="button-row" style="margin-bottom: 10px;">';
+					const charConfig = window.characterConfigs[charName];
+					const tabId = `v-pills-character-${index}`;
+					
+					const tabPane = document.createElement('div');
+					tabPane.className = 'tab-pane fade character-pane';
+					tabPane.id = tabId;
+					tabPane.setAttribute('role', 'tabpanel');
+					tabPane.setAttribute('aria-labelledby', `${tabId}-tab`);
+					
+					// Generate buttons based on character config
+					let buttonsHTML = `<div class="tab-container"><h1>${charName}</h1>`;
+					
+					// Create buttons for each row
+					charConfig.buttons.forEach((row, rowIndex) => {
+					buttonsHTML += `<div class="button-row" style="margin-bottom: ${buttonSpacing}px;">`;
 					row.forEach((button, colIndex) => {
-					const btnStyle = button.style || 'btn btn-primary';
-					const btnId = `btn-${index}-${rowIndex}-${colIndex}`;
-					buttonsHTML += `
+						const btnStyle = button.style || 'btn btn-primary';
+						const btnId = `btn-${index}-${rowIndex}-${colIndex}`;
+						buttonsHTML += `
 						<button type="button" id="${btnId}" onclick="ahkButtonClick(this)" 
-								class="${btnStyle}" style="margin: 2px;"
+								class="${btnStyle}" 
+								style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing/2}px;"
 								data-target="${button.target || ''}" data-keys="${button.keys || ''}">
-						${button.text}
+							${button.text}
 						</button>
-					`;
+						`;
 					});
 					buttonsHTML += '</div>';
-				});
-				
-				buttonsHTML += '</div>';
-				tabPane.innerHTML = buttonsHTML;
-				tabContent.appendChild(tabPane);
-				index++;
+					});
+					
+					buttonsHTML += '</div>';
+					tabPane.innerHTML = buttonsHTML;
+					tabContent.appendChild(tabPane);
+					index++;
 				}
 			}
-
+		
 			function collapsePanel(element) {
 				var navText = document.getElementsByClassName("nav-text");
 				for (i = 0; i < navText.length; i++) {
 					if (navText[i].style.display === "none") {
-						navText[i].style.display = "inline-block";
-						element.innerText = "Collaspe Panel";
+					navText[i].style.display = "inline-block";
+					element.innerText = "Collapse Panel";
 					}
 					else {
-						navText[i].style.display = "none";
-						element.innerText = "Expand Panel";
+					navText[i].style.display = "none";
+					element.innerText = "Expand Panel";
 					}
 				}
 			}
 		</script>
+
 	</head>
 	<body class="bg-body-tertiary">
 		<div class="ahk-titleBar d-flex align-items-stretch bg-body-secondary">

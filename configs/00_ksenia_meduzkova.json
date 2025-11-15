@@ -12,15 +12,213 @@
         "text": "Хихикать",
         "target": "ahk_exe calc.exe",
         "keys": "",
-        "style": "btn btn-outline-danger"
-      }
-    ],
-    [
+        "style": "btn btn-custom-ss13-green"
+      },
       {
         "text": "Краснеть",
         "target": "ahk_exe chrome.exe",
         "keys": "https://www.google.com{Enter}",
-        "style": "btn btn-success"
+        "style": "btn btn-custom-ss13-purple"
+      }
+    ],
+    [
+      {
+        "text": "Сдохнуть нахуй",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-custom-ss13-red"
+      },
+      {
+        "text": "Запил на гитаре",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Плакать",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      }
+    ],
+    [
+      {
+        "text": "Хлопать",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Свистеть",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Приподнять бровь",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      }
+    ],
+    [
+      {
+        "text": "Ворчать",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Обнимать",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Бормотать",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      }
+    ],
+    [
+      {
+        "text": "Кивнуть",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Задыхаться",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Трясти головой",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      }
+    ],
+    [
+      {
+        "text": "Бледнеть",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Поднять руку",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Салютовать",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      }
+    ],
+    [
+      {
+        "text": "Пожать плечами",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Шмыгать носом",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Чихнуть",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      }
+    ],
+    [
+      {
+        "text": "Шлёпнуть",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Морщиться",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Подмигнуть",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      }
+    ],
+    [
+      {
+        "text": "Прищуриться",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Фэйспалм",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Дать пять",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      }
+    ],
+    [
+      {
+        "text": "Пожать руку",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Брататься",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Щёлкнуть пальцами",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      }
+    ],
+    [
+      {
+        "text": "Хмыкнуть",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Почесаться",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Показать число пальцами",
+        "target": "",
+        "keys": "",
+        "style": "btn btn-primary"
       }
     ]
   ]
