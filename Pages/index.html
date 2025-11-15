@@ -255,6 +255,9 @@
 		<main class="d-flex flex-nowrap">
 			<div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
 				<ul class="nav nav-pills flex-column mb-auto" role="tablist" aria-orientation="vertical">
+					<li class="nav-item"><a class="nav-link link-body-emphasis active" data-bs-toggle="pill" role="tab" href="#v-pills-home" id="v-pills-home-tab" aria-controls="v-pills-home" aria-selected="true">
+						<svg class="bi pe-none " width="16" height="16"><use xlink:href="#home"/></svg><span class="nav-text">Home</span></a>
+					</li>
 					<li><a class="nav-link link-body-emphasis" data-bs-toggle="pill" role="tab" href="#v-pills-buttons" id="v-pills-buttons-tab" aria-controls="v-pills-buttons" aria-selected="false">
 						<span class="nav-text">Buttons</span></a>
 					</li>
@@ -277,6 +280,17 @@
 				</div>
 				
 				<div class="tab-content" id="v-pills-tabContent">
+					<!-- v-pills-home -->
+					<div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+						<div class="tab-container">
+						<h1>Welcome to WebViewToo</h1>
+						<p>
+							Test.
+						</p>
+						</div>
+					</div>
+					<!-- End v-pills-home -->
+					 
 					<!-- v-pills-buttons -->
 					<div class="tab-pane fade" id="v-pills-buttons" role="tabpanel" aria-labelledby="v-pills-buttons-tab">
 						<div class="tab-container">
