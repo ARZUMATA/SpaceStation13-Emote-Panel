@@ -271,24 +271,25 @@
 					tabPane.setAttribute('aria-labelledby', `${tabId}-tab`);
 					
 					// Generate buttons based on character config
-					let buttonsHTML = `<div class="tab-container"><h1>${charName}</h1>`;
+					// let buttonsHTML = `<div class="tab-container"><h1>${charName}</h1>`;
+					let buttonsHTML = `<div class="tab-container">`;
 					
 					// Create buttons for each row
 					charConfig.buttons.forEach((row, rowIndex) => {
-					buttonsHTML += `<div class="button-row" style="margin-bottom: ${buttonSpacing}px;">`;
-					row.forEach((button, colIndex) => {
-						const btnStyle = button.style || 'btn btn-primary';
-						const btnId = `btn-${index}-${rowIndex}-${colIndex}`;
-						buttonsHTML += `
-						<button type="button" id="${btnId}" onclick="ahkButtonClick(this)" 
-								class="${btnStyle}" 
-								style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing/2}px;"
-								data-target="${button.target || ''}" data-keys="${button.keys || ''}">
-							${button.text}
-						</button>
-						`;
-					});
-					buttonsHTML += '</div>';
+						buttonsHTML += `<div class="button-row" style="margin-bottom: ${buttonSpacing}px;">`;
+						row.forEach((button, colIndex) => {
+							const btnStyle = button.style || 'btn btn-primary';
+							const btnId = `btn-${index}-${rowIndex}-${colIndex}`;
+							buttonsHTML += `
+							<button type="button" id="${btnId}" onclick="ahkButtonClick(this)" 
+									class="${btnStyle}" 
+									style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing/2}px;"
+									data-target="${button.target || ''}" data-keys="${button.keys || ''}">
+								${button.text}
+							</button>
+							`;
+						});
+						buttonsHTML += '</div>';
 					});
 					
 					buttonsHTML += '</div>';
@@ -375,12 +376,16 @@
 			</li>
 			</ul>
 		</div>
+		
 
 		<main class="d-flex flex-nowrap">
 			<div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
+				<a href="#" style="margin: 0 auto;" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+				<span class="fs-4 nav-text">Hide</span>
+				</a>
+				<div class="b-example-divider bg-body-tertiary" style="height:1px;margin:1rem 0;"></div>
 				<ul class="nav nav-pills flex-column mb-auto" role="tablist" aria-orientation="vertical">
-					<li class="nav-item"><a class="nav-link link-body-emphasis active" data-bs-toggle="pill" role="tab" href="#v-pills-home" id="v-pills-home-tab" aria-controls="v-pills-home" aria-selected="true">
-						<svg class="bi pe-none " width="16" height="16"><use xlink:href="#home"/></svg><span class="nav-text">Home</span></a>
+					<li class="nav-item"><a class="nav-link link-body-emphasis active" data-bs-toggle="pill" role="tab" href="#v-pills-home" id="v-pills-home-tab" aria-controls="v-pills-home" aria-selected="true"><span class="nav-text">Home</span></a>
 					</li>
 					<li><a class="nav-link link-body-emphasis" data-bs-toggle="pill" role="tab" href="#v-pills-buttons" id="v-pills-buttons-tab" aria-controls="v-pills-buttons" aria-selected="false">
 						<span class="nav-text">Buttons</span></a>
