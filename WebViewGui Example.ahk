@@ -77,6 +77,9 @@ CheckWindowPosition() {
         windowConfig["y"] := y
         windowConfig["width"] := w
         windowConfig["height"] := h
+
+        ; Save config immediately when window moves
+        SaveWindowConfig()
     }
 }
 ;///////////////////////////////////////////////////////////////////////////////////////////
