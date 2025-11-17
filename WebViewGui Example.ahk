@@ -11,6 +11,7 @@ CONFIG_LOAD_DELAY := 500  ; milliseconds to wait before loading configs
 
 ;Global variables for window state
 windowConfig := Map("x", 100, "y", 100, "width", 800, "height", 600, "maximized", false)
+isHidden := false  ; Global state variable
 
 ;Create the WebViewGui
 ;///////////////////////////////////////////////////////////////////////////////////////////
@@ -68,20 +69,33 @@ WindowClose(*) {
 }
 
 CheckWindowPosition() {
-    global MyWindow, windowConfig
+    global MyWindow, windowConfig, isHidden
     
     ; Get current window position using WinGetPos
     WinGetPos(&x, &y, &w, &h, "ahk_id " MyWindow.Hwnd)
-    if (x != windowConfig["x"] || y != windowConfig["y"] || 
-        w != windowConfig["width"] || h != windowConfig["height"]) {
-        ; Update config with new position/size
-        windowConfig["x"] := x
-        windowConfig["y"] := y
-        windowConfig["width"] := w
-        windowConfig["height"] := h
-
-        ; Save config immediately when window moves
-        SaveWindowConfig()
+    
+    if (isHidden) {
+        ; Update hidden position/size
+        if (x != windowConfig["hiddenX"] || y != windowConfig["hiddenY"] || 
+            w != windowConfig["hiddenWidth"] || h != windowConfig["hiddenHeight"]) {
+            windowConfig["hiddenX"] := x
+            windowConfig["hiddenY"] := y
+            windowConfig["hiddenWidth"] := w
+            windowConfig["hiddenHeight"] := h
+            ; Save config immediately when window moves
+            SaveWindowConfig()
+        }
+    } else {
+        ; Update normal position/size
+        if (x != windowConfig["x"] || y != windowConfig["y"] || 
+            w != windowConfig["width"] || h != windowConfig["height"]) {
+            windowConfig["x"] := x
+            windowConfig["y"] := y
+            windowConfig["width"] := w
+            windowConfig["height"] := h
+            ; Save config immediately when window moves
+            SaveWindowConfig()
+        }
     }
 }
 ;///////////////////////////////////////////////////////////////////////////////////////////
@@ -139,6 +153,10 @@ SaveWindowConfig() {
         buttonHeight := Integer(bhMatch[1])
     if (RegExMatch(existingContent, "`"buttonSpacing`":\s*(\d+)", &bsMatch))
         buttonSpacing := Integer(bsMatch[1])
+    if (RegExMatch(existingContent, "`"hiddenWidth`":\s*(\d+)", &hwMatch))
+        hiddenWidth := Integer(hwMatch[1])
+    if (RegExMatch(existingContent, "`"hiddenHeight`":\s*(\d+)", &hhMatch))
+        hiddenHeight := Integer(hhMatch[1])
     
     ; Create clean JSON content
     content := "{`n"
@@ -147,6 +165,8 @@ SaveWindowConfig() {
     content .= "  `"buttonSpacing`": " buttonSpacing ",`n"
     content .= "  `"hiddenWidth`": " hiddenWidth ",`n"
     content .= "  `"hiddenHeight`": " hiddenHeight ",`n"
+    content .= "  `"hiddenX`": " windowConfig["hiddenX"] ",`n"
+    content .= "  `"hiddenY`": " windowConfig["hiddenY"] ",`n"
     content .= "  `"x`": " windowConfig["x"] ",`n"
     content .= "  `"y`": " windowConfig["y"] ",`n"
     content .= "  `"width`": " windowConfig["width"] ",`n"
@@ -179,7 +199,7 @@ WebButtonClickEvent(button) {
 }
 
 WebPanelToggleEvent(action) {
-    static isHidden := false
+    global isHidden, windowConfig, MyWindow
     
     ; Log the received action
     OutputDebug("PanelToggleEvent received: " action)
@@ -192,24 +212,26 @@ WebPanelToggleEvent(action) {
         WinGetPos(&x, &y, &w, &h, "ahk_id " MyWindow.Hwnd)
         windowConfig["prevX"] := x
         windowConfig["prevY"] := y
-        windowConfig["prevWidth"] := w
-        windowConfig["prevHeight"] := h
         
         ; Make window borderless and small when hidden
         MyWindow.Style := "-Caption"
         ; Use configurable hidden size
         hiddenWidth := windowConfig.Has("hiddenWidth") ? windowConfig["hiddenWidth"] : 150
         hiddenHeight := windowConfig.Has("hiddenHeight") ? windowConfig["hiddenHeight"] : 50
-        MyWindow.Show("w" hiddenWidth " h" hiddenHeight)
-        OutputDebug("Window hidden: " hiddenWidth "x" hiddenHeight)
+        ; Use saved hidden position if available
+        hiddenX := windowConfig.Has("hiddenX") ? windowConfig["hiddenX"] : 100
+        hiddenY := windowConfig.Has("hiddenY") ? windowConfig["hiddenY"] : 100
+        MyWindow.Show("x" hiddenX " y" hiddenY " w" hiddenWidth " h" hiddenHeight)
+        OutputDebug("Window hidden: " hiddenX "," hiddenY " " hiddenWidth "x" hiddenHeight)
     } else if (action = "show") {
         isHidden := false
         ; Restore normal window with caption
         MyWindow.Style := "+Resize -Caption"
         ; Restore previous size from config
-        if (windowConfig.Has("prevWidth") && windowConfig.Has("prevHeight")) {
-            MyWindow.Show("w" windowConfig["prevWidth"] " h" windowConfig["prevHeight"])
-            OutputDebug("Window shown: " windowConfig["prevWidth"] "x" windowConfig["prevHeight"])
+        if (windowConfig.Has("width") && windowConfig.Has("height")) {
+            MyWindow.Show("x" windowConfig["x"]  " y" windowConfig["y"]  " w" windowConfig["width"] " h" windowConfig["height"])
+
+            OutputDebug("Window shown: " windowConfig["width"] "x" windowConfig["height"])
         } else {
             ; Fallback to default size
             MyWindow.Show("w800 h600")
@@ -222,9 +244,22 @@ WebPanelToggleEvent(action) {
 }
 
 WebWindowMoveEvent(x, y) {
+    global isHidden, windowConfig, MyWindow
+    
     ; Move the window to the new position
     MyWindow.Show("x" Integer(x) " y" Integer(y))
     OutputDebug("Window moved to: " x "," y)
+    
+    ; Save position based on current state
+    WinGetPos(&winX, &winY, &winW, &winH, "ahk_id " MyWindow.Hwnd)
+    if (isHidden) {  ; Check if currently hidden
+        windowConfig["hiddenX"] := winX
+        windowConfig["hiddenY"] := winY
+    } else {
+        windowConfig["x"] := winX
+        windowConfig["y"] := winY
+    }
+    SaveWindowConfig()  ; Save immediately
     return "OK"
 }
 
@@ -257,11 +292,15 @@ LoadAndSendConfigs() {
     if (RegExMatch(configClean, "`"maximized`":(true|false)", &maxMatch))
         windowConfig["maximized"] := (maxMatch[1] = "true")
     
-    ; Extract hidden size values
+    ; Extract hidden size and position values
     if (RegExMatch(configClean, "`"hiddenWidth`":(\d+)", &hwMatch))
         windowConfig["hiddenWidth"] := Integer(hwMatch[1])
     if (RegExMatch(configClean, "`"hiddenHeight`":(\d+)", &hhMatch))
         windowConfig["hiddenHeight"] := Integer(hhMatch[1])
+    if (RegExMatch(configClean, "`"hiddenX`":(-?\d+)", &hxMatch))
+        windowConfig["hiddenX"] := Integer(hxMatch[1])
+    if (RegExMatch(configClean, "`"hiddenY`":(-?\d+)", &hyMatch))
+        windowConfig["hiddenY"] := Integer(hyMatch[1])
     
     ; Validate window position
     ValidateWindowPosition()

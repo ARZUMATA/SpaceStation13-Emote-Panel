@@ -1,5 +1,14 @@
-{
+﻿{
   "buttonWidth": 190,
   "buttonHeight": 35,
-  "buttonSpacing": 5
+  "buttonSpacing": 5,
+  "hiddenWidth": 150,
+  "hiddenHeight": 150,
+  "hiddenX": 870,
+  "hiddenY": 115,
+  "x": 867,
+  "y": 683,
+  "width": 951,
+  "height": 485,
+  "maximized": false
 }
