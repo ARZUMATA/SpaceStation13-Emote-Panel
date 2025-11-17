@@ -643,19 +643,32 @@
 		}
 
 		function ahkButtonClick(ele) {
-			if (ele.Id != null || "") {
-				var eleInfo = ele.Id;
+			// Get text from element
+			var text = "";
+			if (ele.Id != null && ele.Id !== "") {
+				text = ele.Id;
+			} else if (ele.Name != null && ele.Name !== "") {
+				text = ele.Name;
+			} else if (ele.innerText != null && ele.innerText !== "") {
+				text = ele.innerText;
+			} else {
+				text = ele.outerHTML;
 			}
-			else if (ele.Name != null || "") {
-				var eleInfo = ele.Name;
+			
+			// Get command from data attribute or default to text
+			var command = text; // Default to text
+			if (ele.hasAttribute('data-command')) {
+				command = ele.getAttribute('data-command');
 			}
-			else if (ele.innerText != null || "") {
-				var eleInfo = ele.innerText;
-			}
-			else {
-				var eleInfo = ele.outerHTML;
-			}
-			ahk.ButtonClick.Func(eleInfo);
+			
+			// Create JSON object with all three values
+			var buttonData = {
+				text: text,
+				command: command
+			};
+			
+			// Send as JSON string
+			ahk.ButtonClick.Func(JSON.stringify(buttonData));
 		}
 	</script>
 </html>
