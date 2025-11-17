@@ -365,13 +365,17 @@
 							const btnStyle = button.style || 'btn btn-primary';
 							const btnId = `btn-${index}-${rowIndex}-${colIndex}`;
 							const command = button.command || '';
+							const emote = button.emote ? 'true' : 'false';
+
 							// const tooltip = command ? `title="${command}"` : '';
 						
 							buttonsHTML += `
 							<button type="button" id="${btnId}" onclick="ahkButtonClick(this)" 
 									class="${btnStyle}" 
 									style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing/2}px;"
-									data-command="${command}">
+									data-command="${command}"
+									data-emote="${emote}"
+									>
 								${button.text}
 							</button>
 							`;
@@ -709,10 +713,19 @@
 				command = ele.getAttribute('data-command');
 			}
 			
+			// Check if this is an emote (from data-emote attribute or class)
+			var emote = false;
+			if (ele.hasAttribute('data-emote')) {
+				emote = ele.getAttribute('data-emote') === 'true';
+			} else if (ele.classList.contains('emote')) {
+				emote = true;
+			}
+
 			// Create JSON object with all three values
 			var buttonData = {
 				text: text,
-				command: command
+				command: command,
+				emote: emote
 			};
 			
 			// Send as JSON string

@@ -14,6 +14,7 @@ FindGameWindow()
 
 ; Global variable for the hotkey
 buttonHotkey := "t"
+buttonHotkeyEmote := "m"
 
 ; "t" = lowercase t key
 ; "T" = Shift+T
@@ -205,7 +206,7 @@ ValidateWindowPosition() {
 }
 
 SaveWindowConfig() {
-    global windowConfig, isHidden, buttonHotkey
+    global windowConfig, isHidden, buttonHotkey, buttonHotkeyEmote
     
     ; Read existing config content
     existingContent := ""
@@ -230,6 +231,8 @@ SaveWindowConfig() {
     ; Extract existing buttonHotkey if it exists
     if (RegExMatch(existingContent, "`"buttonHotkey`":\s*`"([^`"]*)`"", &hkMatch))
         buttonHotkey := hkMatch[1]
+    if (RegExMatch(existingContent, "`"buttonHotkeyEmote`":\s*`"([^`"]*)`"", &hkMatch))
+        buttonHotkeyEmote := hkMatch[1]
     
     ; Create clean JSON content
     content := "{`n"
@@ -247,6 +250,7 @@ SaveWindowConfig() {
     content .= "  `"maximized`": " (windowConfig["maximized"] ? "true" : "false") ",`n"
     content .= "  `"isHidden`": " (isHidden ? "true" : "false") ",`n"
     content .= "  `"buttonHotkey`": `"" buttonHotkey "`"`n"
+    content .= "  `"buttonHotkeyEmote`": `"" buttonHotkeyEmote "`"`n"
     content .= "}"
     
     ; Write to file
@@ -293,17 +297,23 @@ SendHideCommand() {
 ;Web Callback Functions
 ;///////////////////////////////////////////////////////////////////////////////////////////
 WebButtonClickEvent(button) {
-    global biggestDialogHWND, biggestDialogPID, buttonHotkey, sendKeysToGame, MyWindow
+    global biggestDialogHWND, biggestDialogPID, buttonHotkey, buttonHotkeyEmote, sendKeysToGame, MyWindow
     
-    ; Parse the JSON button data to extract command
+    ; Parse the JSON button data to extract command and emote flag
     command := ""
+    isEmote := false
     try {
         ; Extract command using regex
         if (RegExMatch(button, "`"command`":`"([^`"]*)`"", &cmdMatch)) {
             command := cmdMatch[1]
         }
+        ; Extract emote flag
+        if (RegExMatch(button, "`"emote`":(true|false)", &emoteMatch)) {
+            isEmote := (emoteMatch[1] = "true")
+        }
     } catch {
         command := ""
+        isEmote := false
     }
     
     ; Check if we have a valid HWND
@@ -333,15 +343,18 @@ WebButtonClickEvent(button) {
                 ; Wait for clipboard to be set
                 ClipWait(1)
                 
+                ; Determine which hotkey to send based on emote flag
+                hotkeyToSend := isEmote ? buttonHotkeyEmote : buttonHotkey
+                
                 ; Send the configured hotkey as raw key code
-                SendRawKey(buttonHotkey)
+                SendRawKey(hotkeyToSend)
 
                 Sleep(100)
 
                 ; Paste the command using Ctrl+V
                 SendInput("^v")  ; Ctrl+V to paste
                 OutputDebug("Sent command: " command "`r`n")
-                OutputDebug("buttonHotkey: " buttonHotkey "`r`n")
+                OutputDebug("Hotkey used: " hotkeyToSend " (Emote: " (isEmote ? "true" : "false") ")`r`n")
                 
                 ; Restore clipboard after a short delay
                 SetTimer () => A_Clipboard := oldClipboard, -500

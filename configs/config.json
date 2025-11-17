@@ -3,14 +3,15 @@
   "buttonHeight": 35,
   "buttonSpacing": 5,
   "hiddenWidth": 150,
-  "hiddenHeight": 80,
-  "hiddenX": 1741,
-  "hiddenY": 126,
-  "x": 1442,
-  "y": 506,
-  "width": 1014,
-  "height": 463,
+  "hiddenHeight": 46,
+  "hiddenX": 2122,
+  "hiddenY": 81,
+  "x": 927,
+  "y": 280,
+  "width": 645,
+  "height": 449,
   "maximized": false,
   "isHidden": false,
-  "buttonHotkey": "t"
+  "buttonHotkey": "t",
+  "buttonHotkeyEmote": "m"
 }
