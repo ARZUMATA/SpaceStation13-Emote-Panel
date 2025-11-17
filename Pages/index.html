@@ -28,8 +28,14 @@
 
 			main {
 				height: calc(100vh - (var(--FauxTitleBarHeight)));
+				--sidebar-width: 220px;
 			}
 			
+			.d-flex.flex-column {
+				width: var(--sidebar-width);
+				transition: width 0.3s ease;
+			}
+
 			/* These definitions are for the Web-based TitleBar */
 			.ahk-titleBar {
 				cursor: default;
@@ -312,6 +318,71 @@
 					}
 				}
 			}
+
+			function togglePanel() {
+				const titleBar = document.querySelector('.ahk-titleBar');
+				const sidebar = document.querySelector('.d-flex.flex-column');
+				const divider = document.querySelector('.b-example-vr');
+				const pageContent = document.getElementById('page-content');
+				const hideText = document.querySelector('.fs-4.nav-text');
+				const navLink = document.querySelector('.fs-4.nav-text').closest('a');
+				
+				if (hideText.textContent === 'Hide') {
+				// Hide everything except the Show button
+				titleBar.style.display = 'none';
+				sidebar.style.display = 'none';
+				divider.style.display = 'none';
+				pageContent.style.display = 'none';
+				hideText.textContent = 'Show';
+				navLink.style.position = 'fixed';
+				navLink.style.top = '0';
+				navLink.style.left = '0';
+				navLink.style.width = '100%';
+				navLink.style.height = '100%';
+				navLink.style.margin = '0';
+				navLink.style.padding = '0';
+				navLink.style.display = 'flex';
+				navLink.style.alignItems = 'center';
+				navLink.style.justifyContent = 'center';
+				navLink.style.zIndex = '9999';
+				navLink.style.backgroundColor = '#0d6efd';
+				navLink.style.color = 'white';
+				navLink.style.textDecoration = 'none';
+				
+				// Send message to AHK
+				try {
+					window.chrome.webview.postMessage('{"type":"panelToggle","action":"hide"}');
+				} catch (e) {
+					console.log("Error sending message to AHK:", e);
+				}
+				} else {
+				// Show everything
+				titleBar.style.display = 'flex';
+				sidebar.style.display = 'flex';
+				divider.style.display = 'block';
+				pageContent.style.display = 'block';
+				hideText.textContent = 'Hide';
+				navLink.style.position = 'static';
+				navLink.style.width = 'auto';
+				navLink.style.height = 'auto';
+				navLink.style.margin = '0 auto';
+				navLink.style.padding = '';
+				navLink.style.display = 'flex';
+				navLink.style.alignItems = 'center';
+				navLink.style.justifyContent = 'center';
+				navLink.style.zIndex = 'auto';
+				navLink.style.backgroundColor = 'transparent';
+				navLink.style.color = '';
+				
+				// Send message to AHK
+				try {
+					window.chrome.webview.postMessage('{"type":"panelToggle","action":"show"}');
+				} catch (e) {
+					console.log("Error sending message to AHK:", e);
+				}
+				}
+			}
+
 		</script>
 
 	</head>
@@ -380,8 +451,8 @@
 
 		<main class="d-flex flex-nowrap">
 			<div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
-				<a href="#" style="margin: 0 auto;" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-				<span class="fs-4 nav-text">Hide</span>
+				<a href="#" style="margin: 0 auto;" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none" onclick="togglePanel(); return false;">
+					<span class="fs-4 nav-text">Hide</span>
 				</a>
 				<div class="b-example-divider bg-body-tertiary" style="height:1px;margin:1rem 0;"></div>
 				<ul class="nav nav-pills flex-column mb-auto" role="tablist" aria-orientation="vertical">

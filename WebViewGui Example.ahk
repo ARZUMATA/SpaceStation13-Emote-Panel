@@ -26,6 +26,8 @@ MyWindow.OnEvent("Close", WindowClose)
 MyWindow.Navigate("Pages/index.html")
 ; MyWindow.Debug()
 MyWindow.AddHostObjectToScript("ButtonClick", {func: WebButtonClickEvent})
+MyWindow.AddHostObjectToScript("PanelToggle", {func: WebPanelToggleEvent})
+
 
 ; Load window config and show window
 LoadAndSendConfigs()
@@ -170,6 +172,19 @@ ShowWindowWithConfig() {
 ;///////////////////////////////////////////////////////////////////////////////////////////
 WebButtonClickEvent(button) {
 	MsgBox(button)
+}
+
+WebPanelToggleEvent(action) {
+    if (action = "hide") {
+        ; Make window borderless and small when hidden
+        MyWindow.Style := "-Caption"
+        MyWindow.Show("w150 h50")  ; Small size for button-like appearance
+    } else if (action = "show") {
+        ; Restore normal window with caption
+        MyWindow.Style := "+Resize -Caption"
+        ; Restore previous size (you might want to save this)
+        MyWindow.Show("w800 h600")
+    }
 }
 
 ;///////////////////////////////////////////////////////////////////////////////////////////
