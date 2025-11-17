@@ -319,6 +319,11 @@
 				}
 			}
 
+			// Variables for drag functionality
+			let isDragging = false;
+			let dragOffsetX = 0;
+			let dragOffsetY = 0;
+
 			function togglePanel() {
 				const titleBar = document.querySelector('.ahk-titleBar');
 				const sidebar = document.querySelector('.d-flex.flex-column');
@@ -348,18 +353,27 @@
 				navLink.style.backgroundColor = '#0d6efd';
 				navLink.style.color = 'white';
 				navLink.style.textDecoration = 'none';
+				navLink.style.userSelect = 'none';
+				navLink.style.cursor = 'move';
+				navLink.style["-webkit-app-region"] = 'drag';  // Make entire element draggable
+				
+				// Make the text draggable too
+				hideText.style["-webkit-app-region"] = 'drag';
+				hideText.style.cursor = 'pointer';
 				
 				// Send message to AHK via Host Object (same method as buttons)
 				try {
 					if (typeof ahk !== 'undefined' && typeof ahk.PanelToggle !== 'undefined') {
-						console.log("Sending hide command to AHK");
-						ahk.PanelToggle.Func('hide');
+					console.log("Sending hide command to AHK");
+					ahk.PanelToggle.Func('hide')
+						.then(result => console.log("AHK hide response:", result))
+						.catch(error => console.error("AHK hide error:", error));
 					} else {
-						console.log("AHK PanelToggle not available");
+					console.log("AHK PanelToggle not available");
 					}
-					} catch (e) {
-						console.error("Error sending hide command to AHK:", e);
-					}
+				} catch (e) {
+					console.error("Error sending hide command to AHK:", e);
+				}
 				} else {
 				// Show everything
 				titleBar.style.display = 'flex';
@@ -378,12 +392,20 @@
 				navLink.style.zIndex = 'auto';
 				navLink.style.backgroundColor = 'transparent';
 				navLink.style.color = '';
+				navLink.style.cursor = 'default';
+				navLink.style["-webkit-app-region"] = 'no-drag';
+				
+				// Reset text element styles
+				hideText.style["-webkit-app-region"] = '';
+				hideText.style.cursor = '';
 				
 				// Send message to AHK via Host Object (same method as buttons)
 				try {
 					if (typeof ahk !== 'undefined' && typeof ahk.PanelToggle !== 'undefined') {
 					console.log("Sending show command to AHK");
-					ahk.PanelToggle.Func('show');
+					ahk.PanelToggle.Func('show')
+						.then(result => console.log("AHK show response:", result))
+						.catch(error => console.error("AHK show error:", error));
 					} else {
 					console.log("AHK PanelToggle not available");
 					}

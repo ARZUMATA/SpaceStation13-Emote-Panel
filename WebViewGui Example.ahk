@@ -221,6 +221,13 @@ WebPanelToggleEvent(action) {
     return "OK"
 }
 
+WebWindowMoveEvent(x, y) {
+    ; Move the window to the new position
+    MyWindow.Show("x" Integer(x) " y" Integer(y))
+    OutputDebug("Window moved to: " x "," y)
+    return "OK"
+}
+
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
 ;Config Loading Functions
