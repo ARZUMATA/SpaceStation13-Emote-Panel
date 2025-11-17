@@ -5,6 +5,13 @@
 #Include Lib\WebViewToo.ahk
 GroupAdd("ScriptGroup", "ahk_pid" DllCall("GetCurrentProcessId"))
 
+; Global variables for the biggest dialog window
+biggestDialogHWND := 0
+biggestDialogPID := 0
+
+; Find and log all windows with CLASS:#32770
+FindGameWindow()
+
 ; Configuration
 CONFIG_LOAD_DELAY := 500  ; milliseconds to wait before loading configs
 ;///////////////////////////////////////////////////////////////////////////////////////////
@@ -12,6 +19,48 @@ CONFIG_LOAD_DELAY := 500  ; milliseconds to wait before loading configs
 ;Global variables for window state
 windowConfig := Map("x", 100, "y", 100, "width", 800, "height", 600, "maximized", false)
 isHidden := false  ; Global state variable
+
+
+;FindGameWindow
+;///////////////////////////////////////////////////////////////////////////////////////////
+
+FindGameWindow() {
+    OutputDebug("Searching for the biggest dialog window (CLASS:#32770)...`r`n")
+    
+    biggestHwnd := 0
+    biggestArea := 0
+    biggestPid := 0
+    
+    ; Enumerate all windows with class #32770
+    for hwnd in WinGetList("ahk_class #32770") {
+        WinGetPos(&x, &y, &w, &h, "ahk_id " hwnd)
+        area := w * h
+        
+        ; Get the process ID for this window
+        pid := WinGetPID("ahk_id " hwnd)
+        
+        ; Check if this window is bigger than the current biggest
+        if (area > biggestArea) {
+            biggestArea := area
+            biggestHwnd := hwnd
+            biggestPid := pid
+        }
+    }
+    
+    ; Store the biggest window's HWND and PID as global variables
+    global biggestDialogHWND := biggestHwnd
+    global biggestDialogPID := biggestPid
+    
+    ; Log the biggest window if found
+    if (biggestHwnd != 0) {
+        title := WinGetTitle("ahk_id " biggestHwnd)
+        WinGetPos(&x, &y, &w, &h, "ahk_id " biggestHwnd)
+        OutputDebug("Biggest Dialog Window: HWND=" biggestHwnd ", PID=" biggestPid ", Title='" title "', Pos=" x "," y " Size=" w "x" h " Area=" biggestArea "`r`n")
+    } else {
+        OutputDebug("No dialog windows found.`r`n")
+    }
+}
+
 
 ;Create the WebViewGui
 ;///////////////////////////////////////////////////////////////////////////////////////////
@@ -220,8 +269,7 @@ WebPanelToggleEvent(action) {
     global isHidden, windowConfig, MyWindow
     
     ; Log the received action
-    OutputDebug("PanelToggleEvent received: " action)
-    ToolTip("PanelToggleEvent: " action, 100, 100)
+    OutputDebug("PanelToggleEvent received: " action "`r`n")
     SetTimer () => ToolTip(), -2000  ; Clear tooltip after 2 seconds
     
     if (action = "hide") {
@@ -240,7 +288,7 @@ WebPanelToggleEvent(action) {
         hiddenX := windowConfig.Has("hiddenX") ? windowConfig["hiddenX"] : 100
         hiddenY := windowConfig.Has("hiddenY") ? windowConfig["hiddenY"] : 100
         MyWindow.Show("x" hiddenX " y" hiddenY " w" hiddenWidth " h" hiddenHeight)
-        OutputDebug("Window hidden: " hiddenX "," hiddenY " " hiddenWidth "x" hiddenHeight)
+        OutputDebug("Window hidden: " hiddenX "," hiddenY " " hiddenWidth "x" hiddenHeight "`r`n")
     } else if (action = "show") {
         isHidden := false
         ; Restore normal window with caption
@@ -249,11 +297,11 @@ WebPanelToggleEvent(action) {
         if (windowConfig.Has("width") && windowConfig.Has("height")) {
             MyWindow.Show("x" windowConfig["x"]  " y" windowConfig["y"]  " w" windowConfig["width"] " h" windowConfig["height"])
 
-            OutputDebug("Window shown: " windowConfig["width"] "x" windowConfig["height"])
+            OutputDebug("Window shown: " windowConfig["width"] "x" windowConfig["height"] "`r`n")
         } else {
             ; Fallback to default size
             MyWindow.Show("w800 h600")
-            OutputDebug("Window shown: 800x600 (fallback)")
+            OutputDebug("Window shown: 800x600 (fallback) `r`n")
         }
     }
     
@@ -266,7 +314,7 @@ WebWindowMoveEvent(x, y) {
     
     ; Move the window to the new position
     MyWindow.Show("x" Integer(x) " y" Integer(y))
-    OutputDebug("Window moved to: " x "," y)
+    OutputDebug("Window moved to: " x "," y "`r`n")
     
     ; Save position based on current state
     WinGetPos(&winX, &winY, &winW, &winH, "ahk_id " MyWindow.Hwnd)
