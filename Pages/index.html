@@ -275,8 +275,10 @@
 				tooltip.style.fontSize = '12px';
 				tooltip.style.zIndex = '10000';
 				tooltip.style.pointerEvents = 'none';
-				tooltip.style.whiteSpace = 'nowrap';
 				tooltip.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+				tooltip.style.maxWidth = '200px';
+				tooltip.style.wordWrap = 'break-word';
+				tooltip.style.textAlign = 'center';
 				
 				// Position tooltip near the button
 				const rect = element.getBoundingClientRect();
@@ -284,6 +286,15 @@
 				tooltip.style.top = (rect.top - 25) + 'px';
 				
 				document.body.appendChild(tooltip);
+				
+				// Adjust position if tooltip goes off screen
+				const tooltipRect = tooltip.getBoundingClientRect();
+				if (tooltipRect.right > window.innerWidth) {
+				tooltip.style.left = (window.innerWidth - tooltipRect.width - 10) + 'px';
+				}
+				if (tooltipRect.left < 0) {
+				tooltip.style.left = '10px';
+				}
 			}
 
 			function hideTooltip() {
