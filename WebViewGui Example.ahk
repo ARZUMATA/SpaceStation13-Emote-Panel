@@ -107,6 +107,8 @@ MyWindow.AddHostObjectToScript("PanelToggle", {func: WebPanelToggleEvent})
 ; Load window config and show window
 LoadAndSendConfigs()
 ShowWindowWithConfig()
+
+SetTimer EnsureWebViewOnTop, 1000
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
 ;Hotkeys
@@ -317,7 +319,9 @@ WebButtonClickEvent(button) {
         } else {
             OutputDebug("SendInput skipped - sendKeysToGame is false`r`n")
         }
-
+        
+        ; Ensure our WebView window stays on top
+        WinSetAlwaysOnTop(1, "ahk_id " MyWindow.Hwnd)
     } else {
         MsgBox("No target window found to send hotkey to.")
     }
@@ -484,6 +488,11 @@ SendConfigData() {
     
     ; Start timer to periodically check window position
     SetTimer CheckWindowPosition, 1000
+}
+
+EnsureWebViewOnTop() {
+    global MyWindow
+    WinSetAlwaysOnTop(1, "ahk_id " MyWindow.Hwnd)
 }
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
