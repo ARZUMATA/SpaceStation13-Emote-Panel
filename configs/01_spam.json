@@ -4,22 +4,19 @@
     [
       {
         "text": "Думать",
-        "target": "ahk_exe notepad.exe",
-        "keys": "Hello from AHK!{Enter}",
+        "command": "ahk_exe notepad.exe",
         "style": "btn btn-primary"
       },
       {
         "text": "Бипать",
-        "target": "ahk_exe calc.exe",
-        "keys": "",
+        "command": "ahk_exe calc.exe",
         "style": "btn btn-outline-danger"
       }
     ],
     [
       {
         "text": "Бупать",
-        "target": "ahk_exe chrome.exe",
-        "keys": "https://www.google.com{Enter}",
+        "command": "ahk_exe chrome.exe",
         "style": "btn btn-success"
       }
     ]

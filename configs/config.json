@@ -3,12 +3,13 @@
   "buttonHeight": 35,
   "buttonSpacing": 5,
   "hiddenWidth": 150,
-  "hiddenHeight": 150,
-  "hiddenX": 870,
-  "hiddenY": 115,
-  "x": 867,
-  "y": 683,
-  "width": 951,
-  "height": 485,
-  "maximized": false
+  "hiddenHeight": 80,
+  "hiddenX": 1741,
+  "hiddenY": 126,
+  "x": 1442,
+  "y": 506,
+  "width": 1014,
+  "height": 463,
+  "maximized": false,
+  "isHidden": false
 }

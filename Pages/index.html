@@ -231,6 +231,68 @@
 				});
 			});
 		
+			// Add custom tooltip functionality
+			document.addEventListener('DOMContentLoaded', function() {
+				// Add mouseover event for buttons with data-command
+				document.addEventListener('mouseover', function(e) {
+				if (e.target.tagName === 'BUTTON' && e.target.hasAttribute('data-command')) {
+					const command = e.target.getAttribute('data-command');
+					if (command) {
+					// Show tooltip after delay
+					e.target.tooltipTimer = setTimeout(() => {
+						showTooltip(e.target, command);
+					}, 500); // 500ms delay
+					}
+				}
+				});
+				
+				// Add mouseout event to hide tooltip
+				document.addEventListener('mouseout', function(e) {
+				if (e.target.tagName === 'BUTTON' && e.target.hasAttribute('data-command')) {
+					// Clear timeout if mouse leaves before tooltip shows
+					if (e.target.tooltipTimer) {
+					clearTimeout(e.target.tooltipTimer);
+					}
+					// Hide tooltip
+					hideTooltip();
+				}
+				});
+			});
+
+			function showTooltip(element, text) {
+				// Remove any existing tooltips
+				hideTooltip();
+				
+				// Create tooltip element
+				const tooltip = document.createElement('div');
+				tooltip.id = 'custom-tooltip';
+				tooltip.textContent = text;
+				tooltip.style.position = 'fixed';
+				tooltip.style.backgroundColor = '#333';
+				tooltip.style.color = '#fff';
+				tooltip.style.padding = '4px 8px';
+				tooltip.style.borderRadius = '4px';
+				tooltip.style.fontSize = '12px';
+				tooltip.style.zIndex = '10000';
+				tooltip.style.pointerEvents = 'none';
+				tooltip.style.whiteSpace = 'nowrap';
+				tooltip.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+				
+				// Position tooltip near the button
+				const rect = element.getBoundingClientRect();
+				tooltip.style.left = rect.left + 'px';
+				tooltip.style.top = (rect.top - 25) + 'px';
+				
+				document.body.appendChild(tooltip);
+			}
+
+			function hideTooltip() {
+				const tooltip = document.getElementById('custom-tooltip');
+				if (tooltip) {
+				tooltip.remove();
+				}
+			}
+			
 			function updateSidebarWithCharacters() {
 				const sidebar = document.querySelector('ul[role="tablist"]');
 				if (!sidebar) return;
@@ -282,7 +344,6 @@
 					tabPane.setAttribute('aria-labelledby', `${tabId}-tab`);
 					
 					// Generate buttons based on character config
-					// let buttonsHTML = `<div class="tab-container"><h1>${charName}</h1>`;
 					let buttonsHTML = `<div class="tab-container">`;
 					
 					// Create buttons for each row
@@ -291,11 +352,14 @@
 						row.forEach((button, colIndex) => {
 							const btnStyle = button.style || 'btn btn-primary';
 							const btnId = `btn-${index}-${rowIndex}-${colIndex}`;
+							const command = button.command || '';
+							// const tooltip = command ? `title="${command}"` : '';
+						
 							buttonsHTML += `
 							<button type="button" id="${btnId}" onclick="ahkButtonClick(this)" 
 									class="${btnStyle}" 
 									style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing/2}px;"
-									data-target="${button.target || ''}" data-keys="${button.keys || ''}">
+									data-command="${command}">
 								${button.text}
 							</button>
 							`;
