@@ -12,6 +12,31 @@ biggestDialogPID := 0
 ; Find and log all windows with CLASS:#32770
 FindGameWindow()
 
+; Global variable for the hotkey
+buttonHotkey := "t"
+
+; "t" = lowercase t key
+; "T" = Shift+T
+; "^t" = Ctrl+t
+; "^T" = Ctrl+Shift+T
+; "Enter" - Enter key
+; "Space" - Spacebar
+; "Tab" - Tab key
+; "Esc" - Escape key
+; "Backspace" - Backspace key
+; "Delete" - Delete key
+; "Insert" - Insert key
+; "Home" - Home key
+; "End" - End key
+; "PgUp" - Page Up
+; "PgDn" - Page Down
+; "Up" - Up arrow
+; "Down" - Down arrow
+; "Left" - Left arrow
+; "Right" - Right arrow
+; "buttonHotkey": "Enter"
+; "buttonHotkey": "^Enter" - Ctrl+Enter
+
 ; Configuration
 CONFIG_LOAD_DELAY := 500  ; milliseconds to wait before loading configs
 ;///////////////////////////////////////////////////////////////////////////////////////////
@@ -19,7 +44,7 @@ CONFIG_LOAD_DELAY := 500  ; milliseconds to wait before loading configs
 ;Global variables for window state
 windowConfig := Map("x", 100, "y", 100, "width", 800, "height", 600, "maximized", false)
 isHidden := false  ; Global state variable
-
+sendKeysToGame := false
 
 ;FindGameWindow
 ;///////////////////////////////////////////////////////////////////////////////////////////
@@ -178,7 +203,7 @@ ValidateWindowPosition() {
 }
 
 SaveWindowConfig() {
-    global windowConfig, isHidden
+    global windowConfig, isHidden, buttonHotkey
     
     ; Read existing config content
     existingContent := ""
@@ -200,6 +225,9 @@ SaveWindowConfig() {
         buttonHeight := Integer(bhMatch[1])
     if (RegExMatch(existingContent, "`"buttonSpacing`":\s*(\d+)", &bsMatch))
         buttonSpacing := Integer(bsMatch[1])
+    ; Extract existing buttonHotkey if it exists
+    if (RegExMatch(existingContent, "`"buttonHotkey`":\s*`"([^`"]*)`"", &hkMatch))
+        buttonHotkey := hkMatch[1]
     
     ; Create clean JSON content
     content := "{`n"
@@ -215,7 +243,8 @@ SaveWindowConfig() {
     content .= "  `"width`": " windowConfig["width"] ",`n"
     content .= "  `"height`": " windowConfig["height"] ",`n"
     content .= "  `"maximized`": " (windowConfig["maximized"] ? "true" : "false") ",`n"
-    content .= "  `"isHidden`": " (isHidden ? "true" : "false") "`n"
+    content .= "  `"isHidden`": " (isHidden ? "true" : "false") ",`n"
+    content .= "  `"buttonHotkey`": `"" buttonHotkey "`"`n"
     content .= "}"
     
     ; Write to file
@@ -262,7 +291,36 @@ SendHideCommand() {
 ;Web Callback Functions
 ;///////////////////////////////////////////////////////////////////////////////////////////
 WebButtonClickEvent(button) {
-	MsgBox(button)
+    global biggestDialogHWND, biggestDialogPID, buttonHotkey, sendKeysToGame, MyWindow
+    
+    ; Check if we have a valid HWND
+    if (biggestDialogHWND != 0) {
+        ; Focus the window using its HWND
+        WinActivate("ahk_id " biggestDialogHWND)
+        
+        ; Wait for window to become active (with timeout)
+        timeout := 1000  ; 1 second timeout
+        start := A_TickCount
+        while (WinActive("ahk_id " biggestDialogHWND) = 0) {
+            Sleep(10)
+            if (A_TickCount - start > timeout) {
+                OutputDebug("Timeout waiting for window to become active`r`n")
+                break
+            }
+        }
+        
+        ; Check if we should send keys to the game
+        if (sendKeysToGame) {
+            ; Send the configured hotkey
+            SendInput(buttonHotkey)
+            OutputDebug("SendInput: " buttonHotkey "`r`n")
+        } else {
+            OutputDebug("SendInput skipped - sendKeysToGame is false`r`n")
+        }
+
+    } else {
+        MsgBox("No target window found to send hotkey to.")
+    }
 }
 
 WebPanelToggleEvent(action) {
@@ -334,7 +392,7 @@ WebWindowMoveEvent(x, y) {
 ;Config Loading Functions
 ;///////////////////////////////////////////////////////////////////////////////////////////
 LoadAndSendConfigs() {
-    global windowConfig, isHidden
+    global windowConfig, isHidden, buttonHotkey
     
     ; Load main config
     configFile := FileOpen("configs/config.json", "r", "UTF-8")
@@ -371,6 +429,10 @@ LoadAndSendConfigs() {
     ; Extract isHidden state
     if (RegExMatch(configClean, "`"isHidden`":(true|false)", &hiddenMatch))
         isHidden := (hiddenMatch[1] = "true")
+    
+    ; Extract button hotkey
+    if (RegExMatch(configContent, "`"buttonHotkey`":\s*`"([^`"]*)`"", &hkMatch))
+        buttonHotkey := hkMatch[1]
     
     ; Validate window position
     ValidateWindowPosition()
