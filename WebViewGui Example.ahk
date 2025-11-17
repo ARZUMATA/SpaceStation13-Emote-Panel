@@ -44,7 +44,7 @@ CONFIG_LOAD_DELAY := 500  ; milliseconds to wait before loading configs
 ;Global variables for window state
 windowConfig := Map("x", 100, "y", 100, "width", 800, "height", 600, "maximized", false)
 isHidden := false  ; Global state variable
-sendKeysToGame := false
+sendKeysToGame := true
 
 ;FindGameWindow
 ;///////////////////////////////////////////////////////////////////////////////////////////
@@ -295,6 +295,17 @@ SendHideCommand() {
 WebButtonClickEvent(button) {
     global biggestDialogHWND, biggestDialogPID, buttonHotkey, sendKeysToGame, MyWindow
     
+    ; Parse the JSON button data to extract command
+    command := ""
+    try {
+        ; Extract command using regex
+        if (RegExMatch(button, "`"command`":`"([^`"]*)`"", &cmdMatch)) {
+            command := cmdMatch[1]
+        }
+    } catch {
+        command := ""
+    }
+    
     ; Check if we have a valid HWND
     if (biggestDialogHWND != 0) {
         ; Focus the window using its HWND
@@ -304,7 +315,7 @@ WebButtonClickEvent(button) {
         timeout := 1000  ; 1 second timeout
         start := A_TickCount
         while (WinActive("ahk_id " biggestDialogHWND) = 0) {
-            Sleep(10)
+            Sleep(25)
             if (A_TickCount - start > timeout) {
                 OutputDebug("Timeout waiting for window to become active`r`n")
                 break
@@ -313,9 +324,28 @@ WebButtonClickEvent(button) {
         
         ; Check if we should send keys to the game
         if (sendKeysToGame) {
-            ; Send the configured hotkey
-            SendInput(buttonHotkey)
-            OutputDebug("SendInput: " buttonHotkey "`r`n")
+            ; Copy command to clipboard and paste it
+            if (command != "") {
+                ; Save current clipboard
+                oldClipboard := A_Clipboard
+                A_Clipboard := command
+                
+                ; Wait for clipboard to be set
+                ClipWait(1)
+                
+                ; Send the configured hotkey as raw key code
+                SendRawKey(buttonHotkey)
+
+                Sleep(100)
+
+                ; Paste the command using Ctrl+V
+                SendInput("^v")  ; Ctrl+V to paste
+                OutputDebug("Sent command: " command "`r`n")
+                OutputDebug("buttonHotkey: " buttonHotkey "`r`n")
+                
+                ; Restore clipboard after a short delay
+                SetTimer () => A_Clipboard := oldClipboard, -500
+            }
         } else {
             OutputDebug("SendInput skipped - sendKeysToGame is false`r`n")
         }
@@ -493,6 +523,41 @@ SendConfigData() {
 EnsureWebViewOnTop() {
     global MyWindow
     WinSetAlwaysOnTop(1, "ahk_id " MyWindow.Hwnd)
+}
+;///////////////////////////////////////////////////////////////////////////////////////////
+
+;Helpers
+;///////////////////////////////////////////////////////////////////////////////////////////
+SendRawKey(key) {
+    ; Handle special keys
+    if (key = "Enter") {
+        SendInput("{Blind}{vk0D}")
+    } else if (key = "Space") {
+        SendInput("{Blind}{vk20}")
+    } else if (key = "Tab") {
+        SendInput("{Blind}{vk09}")
+    } else if (key = "Esc") {
+        SendInput("{Blind}{vk1B}")
+    } else if (key = "Backspace") {
+        SendInput("{Blind}{vk08}")
+    } else if (StrLen(key) = 1) {
+        ; Handle single character keys using AHK's built-in GetKeyVK
+        try {
+            vk := GetKeyVK(key)
+            if (vk) {
+                SendInput("{Blind}{vk" Format("{:02X}", vk) "}")
+            } else {
+                ; Fallback
+                SendInput("{Blind}" key)
+            }
+        } catch {
+            ; Fallback if GetKeyVK fails
+            SendInput("{Blind}" key)
+        }
+    } else {
+        ; For key combinations like ^t, !t, etc.
+        SendInput("{Blind}" key)
+    }
 }
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
