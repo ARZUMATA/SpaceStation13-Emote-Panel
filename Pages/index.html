@@ -30,6 +30,11 @@
 				height: calc(100vh - (var(--FauxTitleBarHeight)));
 				--sidebar-width: 220px;
 			}
+
+			/* Hide scrollbars for the entire page */
+			body::-webkit-scrollbar {
+				display: none;
+			}
 			
 			.d-flex.flex-column {
 				width: var(--sidebar-width);

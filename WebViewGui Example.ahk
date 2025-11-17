@@ -143,8 +143,6 @@ SaveWindowConfig() {
     buttonWidth := 190
     buttonHeight := 35
     buttonSpacing := 5
-    hiddenWidth := 150
-    hiddenHeight := 150
 
     ; Extract existing button properties if they exist
     if (RegExMatch(existingContent, "`"buttonWidth`":\s*(\d+)", &bwMatch))
@@ -153,18 +151,14 @@ SaveWindowConfig() {
         buttonHeight := Integer(bhMatch[1])
     if (RegExMatch(existingContent, "`"buttonSpacing`":\s*(\d+)", &bsMatch))
         buttonSpacing := Integer(bsMatch[1])
-    if (RegExMatch(existingContent, "`"hiddenWidth`":\s*(\d+)", &hwMatch))
-        hiddenWidth := Integer(hwMatch[1])
-    if (RegExMatch(existingContent, "`"hiddenHeight`":\s*(\d+)", &hhMatch))
-        hiddenHeight := Integer(hhMatch[1])
     
     ; Create clean JSON content
     content := "{`n"
     content .= "  `"buttonWidth`": " buttonWidth ",`n"
     content .= "  `"buttonHeight`": " buttonHeight ",`n"
     content .= "  `"buttonSpacing`": " buttonSpacing ",`n"
-    content .= "  `"hiddenWidth`": " hiddenWidth ",`n"
-    content .= "  `"hiddenHeight`": " hiddenHeight ",`n"
+    content .= "  `"hiddenWidth`": " windowConfig["hiddenWidth"] ",`n"
+    content .= "  `"hiddenHeight`": " windowConfig["hiddenHeight"] ",`n"
     content .= "  `"hiddenX`": " windowConfig["hiddenX"] ",`n"
     content .= "  `"hiddenY`": " windowConfig["hiddenY"] ",`n"
     content .= "  `"x`": " windowConfig["x"] ",`n"
