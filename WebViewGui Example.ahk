@@ -129,7 +129,9 @@ SaveWindowConfig() {
     buttonWidth := 190
     buttonHeight := 35
     buttonSpacing := 5
-    
+    hiddenWidth := 150
+    hiddenHeight := 150
+
     ; Extract existing button properties if they exist
     if (RegExMatch(existingContent, "`"buttonWidth`":\s*(\d+)", &bwMatch))
         buttonWidth := Integer(bwMatch[1])
@@ -143,6 +145,8 @@ SaveWindowConfig() {
     content .= "  `"buttonWidth`": " buttonWidth ",`n"
     content .= "  `"buttonHeight`": " buttonHeight ",`n"
     content .= "  `"buttonSpacing`": " buttonSpacing ",`n"
+    content .= "  `"hiddenWidth`": " hiddenWidth ",`n"
+    content .= "  `"hiddenHeight`": " hiddenHeight ",`n"
     content .= "  `"x`": " windowConfig["x"] ",`n"
     content .= "  `"y`": " windowConfig["y"] ",`n"
     content .= "  `"width`": " windowConfig["width"] ",`n"
@@ -175,16 +179,46 @@ WebButtonClickEvent(button) {
 }
 
 WebPanelToggleEvent(action) {
+    static isHidden := false
+    
+    ; Log the received action
+    OutputDebug("PanelToggleEvent received: " action)
+    ToolTip("PanelToggleEvent: " action, 100, 100)
+    SetTimer () => ToolTip(), -2000  ; Clear tooltip after 2 seconds
+    
     if (action = "hide") {
+        isHidden := true
+        ; Save current window size before hiding
+        WinGetPos(&x, &y, &w, &h, "ahk_id " MyWindow.Hwnd)
+        windowConfig["prevX"] := x
+        windowConfig["prevY"] := y
+        windowConfig["prevWidth"] := w
+        windowConfig["prevHeight"] := h
+        
         ; Make window borderless and small when hidden
         MyWindow.Style := "-Caption"
-        MyWindow.Show("w150 h50")  ; Small size for button-like appearance
+        ; Use configurable hidden size
+        hiddenWidth := windowConfig.Has("hiddenWidth") ? windowConfig["hiddenWidth"] : 150
+        hiddenHeight := windowConfig.Has("hiddenHeight") ? windowConfig["hiddenHeight"] : 50
+        MyWindow.Show("w" hiddenWidth " h" hiddenHeight)
+        OutputDebug("Window hidden: " hiddenWidth "x" hiddenHeight)
     } else if (action = "show") {
+        isHidden := false
         ; Restore normal window with caption
         MyWindow.Style := "+Resize -Caption"
-        ; Restore previous size (you might want to save this)
-        MyWindow.Show("w800 h600")
+        ; Restore previous size from config
+        if (windowConfig.Has("prevWidth") && windowConfig.Has("prevHeight")) {
+            MyWindow.Show("w" windowConfig["prevWidth"] " h" windowConfig["prevHeight"])
+            OutputDebug("Window shown: " windowConfig["prevWidth"] "x" windowConfig["prevHeight"])
+        } else {
+            ; Fallback to default size
+            MyWindow.Show("w800 h600")
+            OutputDebug("Window shown: 800x600 (fallback)")
+        }
     }
+    
+    ; Return a value to prevent promise rejection
+    return "OK"
 }
 
 ;///////////////////////////////////////////////////////////////////////////////////////////
@@ -215,6 +249,12 @@ LoadAndSendConfigs() {
         windowConfig["height"] := Integer(hMatch[1])
     if (RegExMatch(configClean, "`"maximized`":(true|false)", &maxMatch))
         windowConfig["maximized"] := (maxMatch[1] = "true")
+    
+    ; Extract hidden size values
+    if (RegExMatch(configClean, "`"hiddenWidth`":(\d+)", &hwMatch))
+        windowConfig["hiddenWidth"] := Integer(hwMatch[1])
+    if (RegExMatch(configClean, "`"hiddenHeight`":(\d+)", &hhMatch))
+        windowConfig["hiddenHeight"] := Integer(hhMatch[1])
     
     ; Validate window position
     ValidateWindowPosition()

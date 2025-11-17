@@ -349,12 +349,17 @@
 				navLink.style.color = 'white';
 				navLink.style.textDecoration = 'none';
 				
-				// Send message to AHK
+				// Send message to AHK via Host Object (same method as buttons)
 				try {
-					window.chrome.webview.postMessage('{"type":"panelToggle","action":"hide"}');
-				} catch (e) {
-					console.log("Error sending message to AHK:", e);
-				}
+					if (typeof ahk !== 'undefined' && typeof ahk.PanelToggle !== 'undefined') {
+						console.log("Sending hide command to AHK");
+						ahk.PanelToggle.Func('hide');
+					} else {
+						console.log("AHK PanelToggle not available");
+					}
+					} catch (e) {
+						console.error("Error sending hide command to AHK:", e);
+					}
 				} else {
 				// Show everything
 				titleBar.style.display = 'flex';
@@ -374,11 +379,16 @@
 				navLink.style.backgroundColor = 'transparent';
 				navLink.style.color = '';
 				
-				// Send message to AHK
+				// Send message to AHK via Host Object (same method as buttons)
 				try {
-					window.chrome.webview.postMessage('{"type":"panelToggle","action":"show"}');
+					if (typeof ahk !== 'undefined' && typeof ahk.PanelToggle !== 'undefined') {
+					console.log("Sending show command to AHK");
+					ahk.PanelToggle.Func('show');
+					} else {
+					console.log("AHK PanelToggle not available");
+					}
 				} catch (e) {
-					console.log("Error sending message to AHK:", e);
+					console.error("Error sending show command to AHK:", e);
 				}
 				}
 			}
