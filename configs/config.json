@@ -11,5 +11,6 @@
   "width": 1014,
   "height": 463,
   "maximized": false,
-  "isHidden": false
+  "isHidden": false,
+  "buttonHotkey": "t"
 }

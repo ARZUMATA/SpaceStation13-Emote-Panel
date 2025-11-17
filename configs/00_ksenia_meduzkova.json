@@ -26,166 +26,501 @@
       },
       {
         "text": "Запил на гитаре",
-        "command": "",
+        "command": "*airguitar",
         "style": "btn btn-primary"
       },
       {
         "text": "Плакать",
-        "command": "",
+        "command": "*cry",
         "style": "btn btn-primary"
       }
     ],
     [
       {
         "text": "Хлопать",
-        "command": "",
+        "command": "*clap",
         "style": "btn btn-primary"
       },
       {
         "text": "Свистеть",
-        "command": "",
+        "command": "*whistle",
         "style": "btn btn-primary"
       },
       {
         "text": "Приподнять бровь",
-        "command": "",
+        "command": "*eyebrow",
         "style": "btn btn-primary"
       }
     ],
     [
       {
         "text": "Ворчать",
-        "command": "",
+        "command": "*grumble",
         "style": "btn btn-primary"
       },
       {
         "text": "Обнимать",
-        "command": "",
+        "command": "*hug",
         "style": "btn btn-primary"
       },
       {
         "text": "Бормотать",
-        "command": "",
+        "command": "*mumble",
         "style": "btn btn-primary"
       }
     ],
     [
       {
         "text": "Кивнуть",
-        "command": "",
+        "command": "*nod",
         "style": "btn btn-primary"
       },
       {
         "text": "Задыхаться",
-        "command": "",
+        "command": "*gasp",
         "style": "btn btn-primary"
       },
       {
         "text": "Трясти головой",
-        "command": "",
+        "command": "*shake",
         "style": "btn btn-primary"
       }
     ],
     [
       {
         "text": "Бледнеть",
-        "command": "",
+        "command": "*pale",
         "style": "btn btn-primary"
       },
       {
         "text": "Поднять руку",
-        "command": "",
+        "command": "*raise",
         "style": "btn btn-primary"
       },
       {
         "text": "Салютовать",
-        "command": "",
+        "command": "*salute",
         "style": "btn btn-primary"
       }
     ],
     [
       {
         "text": "Пожать плечами",
-        "command": "",
+        "command": "*shrug",
         "style": "btn btn-primary"
       },
       {
         "text": "Шмыгать носом",
-        "command": "",
+        "command": "*snuffle",
         "style": "btn btn-primary"
       },
       {
         "text": "Чихнуть",
-        "command": "",
+        "command": "*sneeze",
         "style": "btn btn-primary"
       }
     ],
     [
       {
         "text": "Шлёпнуть",
-        "command": "",
+        "command": "*slap",
         "style": "btn btn-primary"
       },
       {
         "text": "Морщиться",
-        "command": "",
+        "command": "*wince",
         "style": "btn btn-primary"
       },
       {
         "text": "Подмигнуть",
-        "command": "",
+        "command": "*wink",
         "style": "btn btn-primary"
       }
     ],
     [
       {
         "text": "Прищуриться",
-        "command": "",
+        "command": "*squint",
         "style": "btn btn-primary"
       },
       {
         "text": "Фэйспалм",
-        "command": "",
+        "command": "*facepalm",
         "style": "btn btn-primary"
       },
       {
         "text": "Дать пять",
-        "command": "",
+        "command": "*highfive",
         "style": "btn btn-primary"
       }
     ],
     [
       {
         "text": "Пожать руку",
-        "command": "",
+        "command": "*handshake",
         "style": "btn btn-primary"
       },
       {
         "text": "Брататься",
-        "command": "",
+        "command": "*dap",
         "style": "btn btn-primary"
       },
       {
         "text": "Щёлкнуть пальцами",
-        "command": "",
+        "command": "*snap",
         "style": "btn btn-primary"
       }
     ],
     [
       {
         "text": "Хмыкнуть",
-        "command": "",
+        "command": "*hem",
         "style": "btn btn-primary"
       },
       {
         "text": "Почесаться",
-        "command": "",
+        "command": "*scratch",
         "style": "btn btn-primary"
       },
       {
         "text": "Показать число пальцами",
-        "command": "",
+        "command": "*signal",
         "style": "btn btn-primary"
+      }
+    ],
+    [
+      {
+        "text": "Кувырок",
+        "command": "*flip",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Крутиться",
+        "command": "*spin",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Поклониться",
+        "command": "*bow",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Рыгнуть",
+        "command": "*burp",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Подавиться",
+        "command": "*choke",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Рухнуть",
+        "command": "*collapse",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Танцевать",
+        "command": "*dance",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Прыгать",
+        "command": "*jump",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Предсмертный вздох",
+        "command": "*deathgasp",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Выворачивать наизнанку",
+        "command": "*gag",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Нести чепуху",
+        "command": "*drool",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Трепетать",
+        "command": "*quiver",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Смотреть",
+        "command": "*look",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Свирепо смотреть",
+        "command": "*glare",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Трястись",
+        "command": "*bshake",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Гримасничать",
+        "command": "*grimace",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Содрогнуться",
+        "command": "*shudder",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Надуть губы",
+        "command": "*pout",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Указать пальцем",
+        "command": "*point",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Кричать",
+        "command": "*scream",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Дрожать",
+        "command": "*shiver",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Вздохнуть",
+        "command": "*sigh",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Удовлетворённо вздохнуть",
+        "command": "*happy",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Улыбнуться",
+        "command": "*smile",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Слабо улыбнуться",
+        "command": "*wsmile",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Ухмыльнуться",
+        "command": "*smug",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Оскалиться в улыбке",
+        "command": "*grin",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Нюхать",
+        "command": "*sniff",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Дуться",
+        "command": "*sulk",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Пялиться",
+        "command": "*stare",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Дрожать в ужасе",
+        "command": "*tremble",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Дёргаться (сильно)",
+        "command": "*twitch",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Дёргаться",
+        "command": "*twitch_s",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Размять конечности",
+        "command": "*strech",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Кружиться",
+        "command": "*sway",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Хныкать",
+        "command": "*whimper",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Наклонить голову на бок",
+        "command": "*tilt",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Ругаться",
+        "command": "*swear",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Храпеть",
+        "command": "*snore",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Скрестить руки",
+        "command": "*cross",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Моргать",
+        "command": "*blink",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Моргать (быстро)",
+        "command": "*blink_r",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Мрачно смотреть",
+        "command": "*scowl",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Усмехнуться",
+        "command": "*chuckle",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Булькать",
+        "command": "*gurgle",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Вдохнуть",
+        "command": "*inhale",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Глубоко вдохнуть",
+        "command": "*deep",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Выдохнуть",
+        "command": "*exhale",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Болезненно вздохнуть",
+        "command": "*groan",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Отправить воздушный поцелуй",
+        "command": "*kiss",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Кашлять",
+        "command": "*cough",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Стонать",
+        "command": "*moan",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Махать",
+        "command": "*wave",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Зевать",
+        "command": "*yawn",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Смеяться",
+        "command": "*laugh",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Потерять сознание",
+        "command": "*faint",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Показать число руками",
+        "command": "*sign",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      }
+    ],
+    [
+      {
+        "text": "Вертеть в руках",
+        "command": "*twirl",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Выпустить Джонни",
+        "command": "*johnny",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
       }
     ]
   ]
