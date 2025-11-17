@@ -129,7 +129,7 @@ ValidateWindowPosition() {
 }
 
 SaveWindowConfig() {
-    global windowConfig
+    global windowConfig, isHidden
     
     ; Read existing config content
     existingContent := ""
@@ -171,7 +171,8 @@ SaveWindowConfig() {
     content .= "  `"y`": " windowConfig["y"] ",`n"
     content .= "  `"width`": " windowConfig["width"] ",`n"
     content .= "  `"height`": " windowConfig["height"] ",`n"
-    content .= "  `"maximized`": " (windowConfig["maximized"] ? "true" : "false") "`n"
+    content .= "  `"maximized`": " (windowConfig["maximized"] ? "true" : "false") ",`n"
+    content .= "  `"isHidden`": " (isHidden ? "true" : "false") "`n"
     content .= "}"
     
     ; Write to file
@@ -181,14 +182,37 @@ SaveWindowConfig() {
 }
 
 ShowWindowWithConfig() {
-    global MyWindow, windowConfig
+    global MyWindow, windowConfig, isHidden
     
-    ; Show window with saved position and size
-    MyWindow.Show("x" windowConfig["x"] " y" windowConfig["y"] " w" windowConfig["width"] " h" windowConfig["height"])
+    if (isHidden) {
+        ; Show window in hidden state
+        MyWindow.Style := "-Caption"
+        hiddenWidth := windowConfig.Has("hiddenWidth") ? windowConfig["hiddenWidth"] : 150
+        hiddenHeight := windowConfig.Has("hiddenHeight") ? windowConfig["hiddenHeight"] : 50
+        hiddenX := windowConfig.Has("hiddenX") ? windowConfig["hiddenX"] : 100
+        hiddenY := windowConfig.Has("hiddenY") ? windowConfig["hiddenY"] : 100
+        MyWindow.Show("x" hiddenX " y" hiddenY " w" hiddenWidth " h" hiddenHeight)
+        
+        ; Send hide command to web to update UI
+        SetTimer SendHideCommand, -100
+    } else {
+        ; Show window in normal state
+        MyWindow.Style := "+Resize -Caption"
+        MyWindow.Show("x" windowConfig["x"] " y" windowConfig["y"] " w" windowConfig["width"] " h" windowConfig["height"])
+        
+        ; Restore maximized state if needed
+        if (windowConfig["maximized"])
+            MyWindow.Maximize()
+    }
     
-    ; Restore maximized state if needed
-    if (windowConfig["maximized"])
-        MyWindow.Maximize()
+    ; Load configs after window is shown
+    LoadAndSendConfigs()
+}
+
+SendHideCommand() {
+    global MyWindow
+    ; Send message to web to update UI to hidden state
+    MyWindow.ExecuteScriptAsync("if (typeof togglePanel === 'function') togglePanel();")
 }
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -268,7 +292,7 @@ WebWindowMoveEvent(x, y) {
 ;Config Loading Functions
 ;///////////////////////////////////////////////////////////////////////////////////////////
 LoadAndSendConfigs() {
-    global windowConfig
+    global windowConfig, isHidden
     
     ; Load main config
     configFile := FileOpen("configs/config.json", "r", "UTF-8")
@@ -301,6 +325,10 @@ LoadAndSendConfigs() {
         windowConfig["hiddenX"] := Integer(hxMatch[1])
     if (RegExMatch(configClean, "`"hiddenY`":(-?\d+)", &hyMatch))
         windowConfig["hiddenY"] := Integer(hyMatch[1])
+    
+    ; Extract isHidden state
+    if (RegExMatch(configClean, "`"isHidden`":(true|false)", &hiddenMatch))
+        isHidden := (hiddenMatch[1] = "true")
     
     ; Validate window position
     ValidateWindowPosition()
