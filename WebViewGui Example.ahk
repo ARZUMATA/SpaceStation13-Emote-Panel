@@ -249,7 +249,7 @@ SaveWindowConfig() {
     content .= "  `"height`": " windowConfig["height"] ",`n"
     content .= "  `"maximized`": " (windowConfig["maximized"] ? "true" : "false") ",`n"
     content .= "  `"isHidden`": " (isHidden ? "true" : "false") ",`n"
-    content .= "  `"buttonHotkey`": `"" buttonHotkey "`"`n"
+    content .= "  `"buttonHotkey`": `"" buttonHotkey "`",`n"
     content .= "  `"buttonHotkeyEmote`": `"" buttonHotkeyEmote "`"`n"
     content .= "}"
     
@@ -355,6 +355,9 @@ WebButtonClickEvent(button) {
                 SendInput("^v")  ; Ctrl+V to paste
                 OutputDebug("Sent command: " command "`r`n")
                 OutputDebug("Hotkey used: " hotkeyToSend " (Emote: " (isEmote ? "true" : "false") ")`r`n")
+                
+                Sleep(150)
+                SendInput("{Enter}")
                 
                 ; Restore clipboard after a short delay
                 SetTimer () => A_Clipboard := oldClipboard, -500
@@ -584,7 +587,7 @@ SendRawKey(key) {
 ;@Ahk2Exe-AddResource Pages\Bootstrap\color-modes.js, Pages\Bootstrap\color-modes.js
 ;@Ahk2Exe-AddResource Pages\Bootstrap\sidebars.css, Pages\Bootstrap\sidebars.css
 ;@Ahk2Exe-AddResource Pages\Bootstrap\sidebars.js, Pages\Bootstrap\sidebars.js
-;@Ahk2Exe-AddResource Pages\Bootstrap\custom-colors.css, Pages\Bootstrap\custom-colors.css
+;@Ahk2Exe-AddResource Pages\custom-colors.css, Pages\custom-colors.css
 ;@Ahk2Exe-AddResource Pages\Bootstrap\fonts\glyphicons-halflings-regular.ttf, Pages\Bootstrap\fonts\glyphicons-halflings-regular.ttf
 ;@Ahk2Exe-AddResource Pages\Bootstrap\fonts\glyphicons-halflings-regular.woff, Pages\Bootstrap\fonts\glyphicons-halflings-regular.woff
 ;@Ahk2Exe-AddResource Pages\Bootstrap\fonts\glyphicons-halflings-regular.woff2, Pages\Bootstrap\fonts\glyphicons-halflings-regular.woff2
