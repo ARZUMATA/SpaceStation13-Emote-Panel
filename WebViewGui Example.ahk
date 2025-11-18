@@ -13,6 +13,7 @@ global globalConfiguration := Map(
     "buttonSpacing", 5,
     "buttonHotkey", "t",
     "buttonHotkeyEmote", "m",
+    "sendKeysToGameUseEnter", false,
     "isHidden", false,
     "window", Map(
         "show", Map(
@@ -37,17 +38,18 @@ global biggestDialogPID := 0
 
 ; Global variables for configuration
 global sendKeysToGame := true
+global sendKeysToGameUseEnter := false
 global CONFIG_LOAD_DELAY := 500  ; milliseconds to wait before loading configs
 global configFile := "configs/config.json"
 
-buttonHotkeyEmote := unset
-buttonHotkey := unset
-isHidden := unset
+global buttonHotkeyEmote := unset
+global buttonHotkey := unset
+global isHidden := unset
 
 LoadConfig() 
 
 ; Find and log all windows with CLASS:#32770
-; FindGameWindow()
+FindGameWindow()
 
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -55,7 +57,7 @@ LoadConfig()
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
 LoadConfig() {
-    global globalConfiguration, configFile, buttonHotkey, buttonHotkeyEmote, isHidden
+    global globalConfiguration, configFile, buttonHotkey, buttonHotkeyEmote, isHidden, sendKeysToGameUseEnter
     
     ; If config file exists, load it and update default values
     if (FileExist(configFile)) {
@@ -90,6 +92,7 @@ LoadConfig() {
     buttonHotkey := globalConfiguration["buttonHotkey"]
     buttonHotkeyEmote := globalConfiguration["buttonHotkeyEmote"]
     isHidden := globalConfiguration["isHidden"]
+    sendKeysToGameUseEnter := globalConfiguration["sendKeysToGameUseEnter"]
 }
 
 SaveConfig() {
@@ -364,7 +367,9 @@ WebButtonClickEvent(button) {
     OutputDebug("Hotkey used: " hotkeyToSend " (Emote: " (isEmote ? "true" : "false") ")`r`n")
     
     Sleep(50)
-    SendInput("{Enter}")
+    if (sendKeysToGameUseEnter) {
+        SendInput("{Enter}")
+    }
     
     ; Restore clipboard after a short delay
     ; SetTimer () => A_Clipboard := oldClipboard, -500

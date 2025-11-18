@@ -4,6 +4,7 @@
   "buttonHotkeyEmote": "m",
   "buttonSpacing": 5,
   "buttonWidth": 170,
+  "sendKeysToGameUseEnter": 1,
   "isHidden": 0,
   "window": {
     "hidden": {
