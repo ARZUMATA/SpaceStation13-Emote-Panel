@@ -11,8 +11,8 @@ global globalConfiguration := Map(
     "buttonHeight", 35,
     "buttonWidth", 190,
     "buttonSpacing", 5,
-    "buttonHotkey", "T",
-    "buttonHotkeyEmote", "M",
+    "buttonHotkey", "t",
+    "buttonHotkeyEmote", "m",
     "sendKeysToGameUseEnter", false,
     "isHidden", false,
     "window", Map(
@@ -274,6 +274,10 @@ ShowWindowWithConfig() {
         ; Show window in hidden state
         MyWindow.Style := "-Caption"
         hiddenConfig := globalConfiguration["window"]["hidden"]
+        ; First show the window with approximate position/size
+        MyWindow.Show("x" hiddenConfig["x"] " y" hiddenConfig["y"] 
+                     " w" hiddenConfig["width"] " h" hiddenConfig["height"])
+        ; Then use Move for precise positioning (accounts for DPI, borders, etc.)
         MyWindow.Move(hiddenConfig["x"], hiddenConfig["y"], hiddenConfig["width"], hiddenConfig["height"])
         
         ; Send hide command to web to update UI
@@ -282,6 +286,10 @@ ShowWindowWithConfig() {
         ; Show window in normal state
         MyWindow.Style := "+Resize -Caption"
         showConfig := globalConfiguration["window"]["show"]
+        ; First show the window with approximate position/size
+        MyWindow.Show("x" showConfig["x"] " y" showConfig["y"] 
+                     " w" showConfig["width"] " h" showConfig["height"])
+        ; Then use Move for precise positioning (accounts for DPI, borders, etc.)
         MyWindow.Move(showConfig["x"], showConfig["y"], showConfig["width"], showConfig["height"])
     }
     
@@ -389,8 +397,8 @@ WebPanelToggleEvent(action) {
         ; Make window borderless and small when hidden
         MyWindow.Style := "-Caption"
         hiddenConfig := globalConfiguration["window"]["hidden"]
-        ; Use explicit positioning to prevent growth
-        MyWindow.Move(hiddenConfig["x"], hiddenConfig["y"], hiddenConfig["width"], hiddenConfig["height"])
+        MyWindow.Show("x" hiddenConfig["x"] " y" hiddenConfig["y"] 
+                     " w" hiddenConfig["width"] " h" hiddenConfig["height"])
         OutputDebug("Window hidden: " hiddenConfig["x"] "," hiddenConfig["y"] 
                    " " hiddenConfig["width"] "x" hiddenConfig["height"] "`r`n")
     } else if (action = "show") {
@@ -399,8 +407,8 @@ WebPanelToggleEvent(action) {
         MyWindow.Style := "+Resize -Caption"
         ; Restore previous size from config
         showConfig := globalConfiguration["window"]["show"]
-        ; Use explicit positioning to prevent growth
-        MyWindow.Move(showConfig["x"], showConfig["y"], showConfig["width"], showConfig["height"])
+        MyWindow.Show("x" showConfig["x"] " y" showConfig["y"] 
+                     " w" showConfig["width"] " h" showConfig["height"])
         OutputDebug("Window shown: " showConfig["x"] "," showConfig["y"] 
                      " " showConfig["width"] "x" showConfig["height"] "`r`n")
     }
@@ -413,7 +421,7 @@ WebWindowMoveEvent(x, y) {
     global isHidden, globalConfiguration, MyWindow
     
     ; Move the window to the new position
-    MyWindow.Move(Integer(x), Integer(y))
+    MyWindow.Show("x" Integer(x) " y" Integer(y))
     OutputDebug("Window moved to: " x "," y "`r`n")
     
     ; Save position based on current state
