@@ -165,30 +165,40 @@ function createCharacterTabPanes() {
         // Generate buttons based on character config
         let buttonsHTML = `<div class="tab-container">`;
 
-        // Create buttons for each row
-        charConfig.buttons.forEach((row, rowIndex) => {
+        // Transpose the buttons matrix to go column by column
+        const maxRows = Math.max(...charConfig.buttons.map(row => row.length), 0);
+        const maxCols = charConfig.buttons.length;
+
+        // Create buttons for each column (top to bottom)
+        for (let colIndex = 0; colIndex < maxRows; colIndex++) {
             buttonsHTML += `<div class="button-row" style="margin-bottom: ${buttonSpacing}px;">`;
-            row.forEach((button, colIndex) => {
-                const btnStyle = button.style || 'btn btn-primary';
-                const btnId = `btn-${index}-${rowIndex}-${colIndex}`;
-                const command = button.command || '';
-                const emote = button.emote ? 'true' : 'false';
+            for (let rowIndex = 0; rowIndex < maxCols; rowIndex++) {
+                // Check if this column exists in this row
+                if (colIndex < charConfig.buttons[rowIndex].length) {
+                    const button = charConfig.buttons[rowIndex][colIndex];
+                    const btnStyle = button.style || 'btn btn-primary';
+                    const btnId = `btn-${index}-${rowIndex}-${colIndex}`;
+                    const command = button.command || '';
+                    const emote = button.emote ? 'true' : 'false';
 
-                // const tooltip = command ? `title="${command}"` : '';
-
-                buttonsHTML += `
-                <button type="button" id="${btnId}" onclick="sendEmoteCommand(this)" 
-                        class="${btnStyle}" 
-                        style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing / 2}px;"
-                        data-command="${command}"
-                        data-emote="${emote}"
-                        >
-                    ${button.text}
-                </button>
-                `;
-            });
+                    buttonsHTML += `
+                    <button type="button" id="${btnId}" onclick="sendEmoteCommand(this)" 
+                            class="${btnStyle}" 
+                            style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing / 2}px;"
+                            data-command="${command}"
+                            data-emote="${emote}">
+                        ${button.text}
+                    </button>
+                    `;
+                } else {
+                    // Add empty space for alignment
+                    buttonsHTML += `
+                    <div style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing / 2}px; display: inline-block;"></div>
+                    `;
+                }
+            }
             buttonsHTML += '</div>';
-        });
+        }
 
         buttonsHTML += '</div>';
         tabPane.innerHTML = buttonsHTML;

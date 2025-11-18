@@ -3,57 +3,131 @@
 #Requires AutoHotkey v2
 #SingleInstance Force
 #Include Lib\WebViewToo.ahk
+#Include  Lib\_JXON.ahk
 GroupAdd("ScriptGroup", "ahk_pid" DllCall("GetCurrentProcessId"))
+
+; Global configuration dictionary
+global globalConfiguration := Map(
+    "buttonHeight", 35,
+    "buttonWidth", 190,
+    "buttonSpacing", 5,
+    "buttonHotkey", "t",
+    "buttonHotkeyEmote", "m",
+    "isHidden", false,
+    "window", Map(
+        "show", Map(
+            "x", 100, 
+            "y", 100, 
+            "width", 800, 
+            "height", 600, 
+        ),
+        "hidden", Map(
+            "x", 100,
+            "y", 100,
+            "width", 150,
+            "height", 50
+        )
+    )
+)
+
 
 ; Global variables for the biggest dialog window
 global biggestDialogHWND := 0
 global biggestDialogPID := 0
 
-; Find and log all windows with CLASS:#32770
-FindGameWindow()
-
 ; Global variables for configuration
-global buttonHotkey := "t"
-global buttonHotkeyEmote := "m"
 global sendKeysToGame := true
-global isHidden := false
 global CONFIG_LOAD_DELAY := 500  ; milliseconds to wait before loading configs
+global configFile := "configs/config.json"
 
-; Global variables for window state
-global windowConfig := Map(
-    "x", 100, 
-    "y", 100, 
-    "width", 800, 
-    "height", 600, 
-    "maximized", false,
-    "hiddenX", 100,
-    "hiddenY", 100,
-    "hiddenWidth", 150,
-    "hiddenHeight", 50
-)
+buttonHotkeyEmote := unset
+buttonHotkey := unset
+isHidden := unset
 
-; Hotkey documentation
-; "t" = lowercase t key
-; "T" = Shift+T
-; "^t" = Ctrl+t
-; "^T" = Ctrl+Shift+T
-; "{Enter}" - Enter key
-; "{Space}" - Spacebar
-; "{Tab}" - Tab key
-; "{Esc}" - Escape key
-; "{Backspace}" - Backspace key
-; "{Delete}" - Delete key
-; "{Insert}" - Insert key
-; "{Home}" - Home key
-; "{End}" - End key
-; "{PgUp}" - Page Up
-; "{PgDn}" - Page Down
-; "{Up}" - Up arrow
-; "{Down}" - Down arrow
-; "{Left}" - Left arrow
-; "{Right}" - Right arrow
-; "buttonHotkey": "{Enter}"
-; "buttonHotkey": "^{Enter}" - Ctrl+Enter
+LoadConfig() 
+
+; Find and log all windows with CLASS:#32770
+; FindGameWindow()
+
+;///////////////////////////////////////////////////////////////////////////////////////////
+
+; Load Configuration
+;///////////////////////////////////////////////////////////////////////////////////////////
+
+LoadConfig() {
+    global globalConfiguration, configFile, buttonHotkey, buttonHotkeyEmote, isHidden
+    
+    ; If config file exists, load it and update default values
+    if (FileExist(configFile)) {
+        try {
+            fileContent := FileRead(configFile)
+            loadedConfig := Jxon_Load(&fileContent)
+            
+            ; Update existing config values with loaded values
+            for key, value in loadedConfig {
+                if (globalConfiguration.Has(key)) {
+                    if (key = "window" && value is Map) {
+                        ; Handle nested window config
+                        for stateKey, stateValue in value {
+                            if (globalConfiguration["window"].Has(stateKey)) {
+                                for posKey, posValue in stateValue {
+                                    if (globalConfiguration["window"][stateKey].Has(posKey)) {
+                                        globalConfiguration["window"][stateKey][posKey] := posValue
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        globalConfiguration[key] := value
+                    }
+                }
+            }
+        } catch as err {
+            OutputDebug("Error loading config: " err.Message "`r`n")
+        }
+    }
+
+    buttonHotkey := globalConfiguration["buttonHotkey"]
+    buttonHotkeyEmote := globalConfiguration["buttonHotkeyEmote"]
+    isHidden := globalConfiguration["isHidden"]
+}
+
+SaveConfig() {
+    global globalConfiguration, isHidden, buttonHotkey, buttonHotkeyEmote
+
+    ; Update the global configuration with current values
+    globalConfiguration["isHidden"] := isHidden
+    globalConfiguration["buttonHotkey"] := buttonHotkey
+    globalConfiguration["buttonHotkeyEmote"] := buttonHotkeyEmote
+
+    ; Get current window positions
+    WinGetPos(&x, &y, &w, &h, "ahk_id " MyWindow.Hwnd)
+
+    if (isHidden) {
+        globalConfiguration["window"]["hidden"]["x"] := x
+        globalConfiguration["window"]["hidden"]["y"] := y
+        globalConfiguration["window"]["hidden"]["width"] := w
+        globalConfiguration["window"]["hidden"]["height"] := h
+    } else {
+        globalConfiguration["window"]["show"]["x"] := x
+        globalConfiguration["window"]["show"]["y"] := y
+        globalConfiguration["window"]["show"]["width"] := w
+        globalConfiguration["window"]["show"]["height"] := h
+    }
+
+    ; Create JSON content using Jxon
+    try {
+        content := Jxon_Dump(globalConfiguration, 2)  ; 2 spaces for indentation
+        
+        ; Write to file
+        file := FileOpen("configs/config.json", "w", "UTF-8")
+        file.Write(content)
+        file.Close()
+    } catch as err {
+        OutputDebug("Error saving config: " err.Message "`r`n")
+    }
+}
+
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
 ; Find Game Window
@@ -113,7 +187,7 @@ MyWindow.AddHostObjectToScript("ButtonClick", {func: WebButtonClickEvent})
 MyWindow.AddHostObjectToScript("PanelToggle", {func: WebPanelToggleEvent})
 
 ; Load window config and show window
-LoadAndSendConfigs()
+SendConfigs()
 ShowWindowWithConfig()
 
 SetTimer EnsureWebViewOnTop, 1000
@@ -129,37 +203,37 @@ SetTimer EnsureWebViewOnTop, 1000
 ; Window Event Handlers
 ;///////////////////////////////////////////////////////////////////////////////////////////
 WindowClose(*) {
-    SaveWindowConfig()
+    SaveConfig()
     ExitApp()
 }
 
 CheckWindowPosition() {
-    global MyWindow, windowConfig, isHidden
+    global MyWindow, globalConfiguration, isHidden
     
     ; Get current window position using WinGetPos
     WinGetPos(&x, &y, &w, &h, "ahk_id " MyWindow.Hwnd)
     
     if (isHidden) {
         ; Update hidden position/size
-        if (x != windowConfig["hiddenX"] || y != windowConfig["hiddenY"] || 
-            w != windowConfig["hiddenWidth"] || h != windowConfig["hiddenHeight"]) {
-            windowConfig["hiddenX"] := x
-            windowConfig["hiddenY"] := y
-            windowConfig["hiddenWidth"] := w
-            windowConfig["hiddenHeight"] := h
+        if (x != globalConfiguration["window"]["hidden"]["x"] || y != globalConfiguration["window"]["hidden"]["y"] || 
+            w != globalConfiguration["window"]["hidden"]["width"] || h != globalConfiguration["window"]["hidden"]["height"]) {
+            globalConfiguration["window"]["hidden"]["x"] := x
+            globalConfiguration["window"]["hidden"]["y"] := y
+            globalConfiguration["window"]["hidden"]["width"] := w
+            globalConfiguration["window"]["hidden"]["height"] := h
             ; Save config immediately when window moves
-            SaveWindowConfig()
+            SaveConfig()
         }
     } else {
         ; Update normal position/size
-        if (x != windowConfig["x"] || y != windowConfig["y"] || 
-            w != windowConfig["width"] || h != windowConfig["height"]) {
-            windowConfig["x"] := x
-            windowConfig["y"] := y
-            windowConfig["width"] := w
-            windowConfig["height"] := h
+        if (x != globalConfiguration["window"]["show"]["x"] || y != globalConfiguration["window"]["show"]["y"] || 
+            w != globalConfiguration["window"]["show"]["width"] || h != globalConfiguration["window"]["show"]["height"]) {
+            globalConfiguration["window"]["show"]["x"] := x
+            globalConfiguration["window"]["show"]["y"] := y
+            globalConfiguration["window"]["show"]["width"] := w
+            globalConfiguration["window"]["show"]["height"] := h
             ; Save config immediately when window moves
-            SaveWindowConfig()
+            SaveConfig()
         }
     }
 }
@@ -168,108 +242,50 @@ CheckWindowPosition() {
 ; Window Config Functions
 ;///////////////////////////////////////////////////////////////////////////////////////////
 ValidateWindowPosition() {
-    global windowConfig
+    global globalConfiguration
     
     ; Get primary monitor dimensions
     screenWidth := A_ScreenWidth
     screenHeight := A_ScreenHeight
     
     ; Ensure window is within bounds
-    windowConfig["x"] := Max(0, Min(windowConfig["x"], screenWidth - 100))
-    windowConfig["y"] := Max(0, Min(windowConfig["y"], screenHeight - 100))
-    windowConfig["width"] := Max(100, Min(windowConfig["width"], screenWidth))
-    windowConfig["height"] := Max(100, Min(windowConfig["height"], screenHeight))
-}
-
-SaveWindowConfig() {
-    global windowConfig, isHidden, buttonHotkey, buttonHotkeyEmote
+    ; Validate show state window position
+    showConfig := globalConfiguration["window"]["show"]
+    showConfig["x"] := Max(0, Min(showConfig["x"], screenWidth - 100))
+    showConfig["y"] := Max(0, Min(showConfig["y"], screenHeight - 100))
+    showConfig["width"] := Max(100, Min(showConfig["width"], screenWidth))
+    showConfig["height"] := Max(100, Min(showConfig["height"], screenHeight))
     
-    ; Default values
-    config := Map(
-        "buttonWidth", 190,
-        "buttonHeight", 35,
-        "buttonSpacing", 5,
-        "hiddenWidth", windowConfig["hiddenWidth"],
-        "hiddenHeight", windowConfig["hiddenHeight"],
-        "hiddenX", windowConfig["hiddenX"],
-        "hiddenY", windowConfig["hiddenY"],
-        "x", windowConfig["x"],
-        "y", windowConfig["y"],
-        "width", windowConfig["width"],
-        "height", windowConfig["height"],
-        "maximized", windowConfig["maximized"],
-        "isHidden", isHidden,
-        "buttonHotkey", buttonHotkey,
-        "buttonHotkeyEmote", buttonHotkeyEmote
-    )
-    
-    ; Read existing config content if it exists
-    if (FileExist("configs/config.json")) {
-        try {
-            file := FileOpen("configs/config.json", "r", "UTF-8")
-            existingContent := file.Read()
-            file.Close()
-            
-            ; Parse existing content to preserve button properties
-            for key in ["buttonWidth", "buttonHeight", "buttonSpacing", "buttonHotkey", "buttonHotkeyEmote"] {
-                if (RegExMatch(existingContent, "`"" key "`":\s*(`"([^`"]*)`"|(\d+))", &match)) {
-                    if (match.Count >= 3 && match[2] != "") {
-                        config[key] := match[2]  ; String value
-                    } else if (match.Count >= 4 && match[3] != "") {
-                        config[key] := Integer(match[3])  ; Numeric value
-                    }
-                }
-            }
-        }
-    }
-    
-    ; Create JSON content
-    content := "{`n"
-    for key, value in config {
-        if (value is Integer || value is Float) {
-            content .= "  `"" key "`": " value (A_Index < config.Count ? "," : "") "`n"
-        } else if (value = true || value = false) {
-            content .= "  `"" key "`": " (value ? "true" : "false") (A_Index < config.Count ? "," : "") "`n"
-        } else {
-            content .= "  `"" key "`": `"" value "`"" (A_Index < config.Count ? "," : "") "`n"
-        }
-    }
-    content .= "}"
-    
-    ; Write to file
-    try {
-        file := FileOpen("configs/config.json", "w", "UTF-8")
-        file.Write(content)
-        file.Close()
-    } catch as err {
-        OutputDebug("Error saving config: " err.Message "`r`n")
-    }
+    ; Validate hidden state window position
+    hiddenConfig := globalConfiguration["window"]["hidden"]
+    hiddenConfig["x"] := Max(0, Min(hiddenConfig["x"], screenWidth - 50))
+    hiddenConfig["y"] := Max(0, Min(hiddenConfig["y"], screenHeight - 50))
+    hiddenConfig["width"] := Max(50, Min(hiddenConfig["width"], screenWidth))
+    hiddenConfig["height"] := Max(30, Min(hiddenConfig["height"], screenHeight))
 }
 
 ShowWindowWithConfig() {
-    global MyWindow, windowConfig, isHidden
+    global MyWindow, globalConfiguration, isHidden
     
     if (isHidden) {
         ; Show window in hidden state
         MyWindow.Style := "-Caption"
-        MyWindow.Show("x" windowConfig["hiddenX"] " y" windowConfig["hiddenY"] 
-                     " w" windowConfig["hiddenWidth"] " h" windowConfig["hiddenHeight"])
+        hiddenConfig := globalConfiguration["window"]["hidden"]
+        MyWindow.Show("x" hiddenConfig["x"] " y" hiddenConfig["y"] 
+                     " w" hiddenConfig["width"] " h" hiddenConfig["height"])
         
         ; Send hide command to web to update UI
         SetTimer SendHideCommand, -100
     } else {
         ; Show window in normal state
         MyWindow.Style := "+Resize -Caption"
-        MyWindow.Show("x" windowConfig["x"] " y" windowConfig["y"] 
-                     " w" windowConfig["width"] " h" windowConfig["height"])
-        
-        ; Restore maximized state if needed
-        if (windowConfig["maximized"])
-            MyWindow.Maximize()
+        showConfig := globalConfiguration["window"]["show"]
+        MyWindow.Show("x" showConfig["x"] " y" showConfig["y"] 
+                     " w" showConfig["width"] " h" showConfig["height"])
     }
     
     ; Load configs after window is shown
-    LoadAndSendConfigs()
+    SendConfigs()
 }
 
 SendHideCommand() {
@@ -359,7 +375,7 @@ WebButtonClickEvent(button) {
 }
 
 WebPanelToggleEvent(action) {
-    global isHidden, windowConfig, MyWindow
+    global isHidden, globalConfiguration, MyWindow
     
     ; Log the received action
     OutputDebug("PanelToggleEvent received: " action "`r`n")
@@ -369,19 +385,21 @@ WebPanelToggleEvent(action) {
         isHidden := true
         ; Make window borderless and small when hidden
         MyWindow.Style := "-Caption"
-        MyWindow.Show("x" windowConfig["hiddenX"] " y" windowConfig["hiddenY"] 
-                     " w" windowConfig["hiddenWidth"] " h" windowConfig["hiddenHeight"])
-        OutputDebug("Window hidden: " windowConfig["hiddenX"] "," windowConfig["hiddenY"] 
-                   " " windowConfig["hiddenWidth"] "x" windowConfig["hiddenHeight"] "`r`n")
+        hiddenConfig := globalConfiguration["window"]["hidden"]
+        MyWindow.Show("x" hiddenConfig["x"] " y" hiddenConfig["y"] 
+                     " w" hiddenConfig["width"] " h" hiddenConfig["height"])
+        OutputDebug("Window hidden: " hiddenConfig["x"] "," hiddenConfig["y"] 
+                   " " hiddenConfig["width"] "x" hiddenConfig["height"] "`r`n")
     } else if (action = "show") {
         isHidden := false
         ; Restore normal window with caption
         MyWindow.Style := "+Resize -Caption"
         ; Restore previous size from config
-        if (windowConfig.Has("width") && windowConfig.Has("height")) {
-            MyWindow.Show("x" windowConfig["x"] " y" windowConfig["y"] 
-                         " w" windowConfig["width"] " h" windowConfig["height"])
-            OutputDebug("Window shown: " windowConfig["width"] "x" windowConfig["height"] "`r`n")
+        showConfig := globalConfiguration["window"]["show"]
+        if (showConfig.Has("width") && showConfig.Has("height")) {
+            MyWindow.Show("x" showConfig["x"] " y" showConfig["y"] 
+                         " w" showConfig["width"] " h" showConfig["height"])
+            OutputDebug("Window shown: " showConfig["width"] "x" showConfig["height"] "`r`n")
         } else {
             ; Fallback to default size
             MyWindow.Show("w800 h600")
@@ -394,7 +412,7 @@ WebPanelToggleEvent(action) {
 }
 
 WebWindowMoveEvent(x, y) {
-    global isHidden, windowConfig, MyWindow
+    global isHidden, globalConfiguration, MyWindow
     
     ; Move the window to the new position
     MyWindow.Show("x" Integer(x) " y" Integer(y))
@@ -403,54 +421,21 @@ WebWindowMoveEvent(x, y) {
     ; Save position based on current state
     WinGetPos(&winX, &winY, &winW, &winH, "ahk_id " MyWindow.Hwnd)
     if (isHidden) {
-        windowConfig["hiddenX"] := winX
-        windowConfig["hiddenY"] := winY
+        globalConfiguration["hiddenX"] := winX
+        globalConfiguration["hiddenY"] := winY
     } else {
-        windowConfig["x"] := winX
-        windowConfig["y"] := winY
+        globalConfiguration["x"] := winX
+        globalConfiguration["y"] := winY
     }
-    SaveWindowConfig()  ; Save immediately
+    SaveConfig()  ; Save immediately
     return "OK"
 }
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
 ; Config Loading Functions
 ;///////////////////////////////////////////////////////////////////////////////////////////
-LoadAndSendConfigs() {
-    global windowConfig, isHidden, buttonHotkey
-    
-    ; Load main config if it exists
-    if (!FileExist("configs/config.json")) {
-        return
-    }
-    
-    try {
-        configFile := FileOpen("configs/config.json", "r", "UTF-8")
-        configContent := configFile.Read()
-        configFile.Close()
-        
-        ; Extract window position values
-        configClean := RegExReplace(RegExReplace(RegExReplace(configContent, " ", ""), "`n", ""), "`r", "")
-        
-        ; Extract window position values
-        for key in ["x", "y", "width", "height", "hiddenWidth", "hiddenHeight", "hiddenX", "hiddenY"] {
-            if (RegExMatch(configClean, "`"" key "`":(-?\d+)", &match)) {
-                windowConfig[key] := Integer(match[1])
-            }
-        }
-        
-        ; Extract boolean values
-        for key in ["maximized", "isHidden"] {
-            if (RegExMatch(configClean, "`"" key "`":(true|false)", &match)) {
-                %key% := (match[1] = "true")
-            }
-        }
-        
-        ; Extract button hotkey
-        if (RegExMatch(configContent, "`"buttonHotkey`":\s*`"([^`"]*)`"", &hkMatch)) {
-            buttonHotkey := hkMatch[1]
-        }
-    }
+SendConfigs() {
+    global globalConfiguration, isHidden, buttonHotkey
     
     ; Validate window position
     ValidateWindowPosition()
