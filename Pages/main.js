@@ -184,7 +184,7 @@ function createCharacterTabPanes() {
                     buttonsHTML += `
                     <button type="button" id="${btnId}" onclick="sendEmoteCommand(this)" 
                             class="${btnStyle}" 
-                            style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing / 2}px;"
+                            style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing / 2}px; padding: 0; box-sizing: border-box;"
                             data-command="${command}"
                             data-emote="${emote}">
                         ${button.text}
