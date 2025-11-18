@@ -177,7 +177,7 @@ function createCharacterTabPanes() {
                 // const tooltip = command ? `title="${command}"` : '';
 
                 buttonsHTML += `
-                <button type="button" id="${btnId}" onclick="ahkButtonClick(this)" 
+                <button type="button" id="${btnId}" onclick="sendEmoteCommand(this)" 
                         class="${btnStyle}" 
                         style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing / 2}px;"
                         data-command="${command}"
@@ -325,7 +325,7 @@ function ahkWebMessage(Msg) {
     console.log(Msg.data);
 }
 
-function ahkButtonClick(ele) {
+function sendEmoteCommand(ele) {
     // Get text from element
     var text = "";
     if (ele.Id != null && ele.Id !== "") {
@@ -361,4 +361,31 @@ function ahkButtonClick(ele) {
 
     // Send as JSON string
     ahk.ButtonClick.Func(JSON.stringify(buttonData));
+}
+
+// Let's you copy button styles from previews for use in JSON configuration
+// Double-click any button to copy its class names to clipboard
+function buttonPreviewClick(element) {
+    // Get the class attribute from the clicked button
+    const classList = element.className;
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(classList).then(function() {
+        // Show visual feedback
+        const originalText = element.textContent;
+        element.textContent = "Copied!";
+        element.style.opacity = "0.7";
+        
+        // Reset after 1 second
+        setTimeout(function() {
+            element.textContent = originalText;
+            element.style.opacity = "1";
+        }, 1000);
+        
+        // Show notification (optional)
+        console.log("Copied to clipboard: " + classList);
+    }).catch(function(error) {
+        console.error("Copy failed: ", error);
+        alert("Failed to copy class name to clipboard");
+    });
 }
