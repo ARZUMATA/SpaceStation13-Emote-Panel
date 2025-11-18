@@ -1,17 +1,22 @@
 ﻿{
-  "buttonWidth": 190,
-  "buttonHeight": 35,
-  "buttonSpacing": 5,
-  "hiddenWidth": 150,
-  "hiddenHeight": 46,
-  "hiddenX": 2122,
-  "hiddenY": 81,
-  "x": 927,
-  "y": 280,
-  "width": 645,
-  "height": 449,
-  "maximized": false,
-  "isHidden": false,
+  "buttonHeight": 30,
   "buttonHotkey": "t",
-  "buttonHotkeyEmote": "m"
+  "buttonHotkeyEmote": "m",
+  "buttonSpacing": 5,
+  "buttonWidth": 170,
+  "isHidden": 0,
+  "window": {
+    "hidden": {
+      "height": 45,
+      "width": 137,
+      "x": 1411,
+      "y": 731
+    },
+    "show": {
+      "height": 635,
+      "width": 1007,
+      "x": 1322,
+      "y": 651
+    }
+  }
 }
