@@ -401,15 +401,10 @@ WebPanelToggleEvent(action) {
         MyWindow.Style := "+Resize -Caption"
         ; Restore previous size from config
         showConfig := globalConfiguration["window"]["show"]
-        if (showConfig.Has("width") && showConfig.Has("height")) {
-            MyWindow.Show("x" showConfig["x"] " y" showConfig["y"] 
-                         " w" showConfig["width"] " h" showConfig["height"])
-            OutputDebug("Window shown: " showConfig["width"] "x" showConfig["height"] "`r`n")
-        } else {
-            ; Fallback to default size
-            MyWindow.Show("w800 h600")
-            OutputDebug("Window shown: 800x600 (fallback) `r`n")
-        }
+        MyWindow.Show("x" showConfig["x"] " y" showConfig["y"] 
+                     " w" showConfig["width"] " h" showConfig["height"])
+        OutputDebug("Window shown: " showConfig["x"] "," showConfig["y"] 
+                     " " showConfig["width"] "x" showConfig["height"] "`r`n")
     }
     
     ; Return a value to prevent promise rejection
@@ -426,15 +421,16 @@ WebWindowMoveEvent(x, y) {
     ; Save position based on current state
     WinGetPos(&winX, &winY, &winW, &winH, "ahk_id " MyWindow.Hwnd)
     if (isHidden) {
-        globalConfiguration["hiddenX"] := winX
-        globalConfiguration["hiddenY"] := winY
+        globalConfiguration["window"]["hidden"]["x"] := winX
+        globalConfiguration["window"]["hidden"]["y"] := winY
     } else {
-        globalConfiguration["x"] := winX
-        globalConfiguration["y"] := winY
+        globalConfiguration["window"]["show"]["x"] := winX
+        globalConfiguration["window"]["show"]["y"] := winY
     }
     SaveConfig()  ; Save immediately
     return "OK"
 }
+
 ;///////////////////////////////////////////////////////////////////////////////////////////
 
 ; Config Loading Functions
