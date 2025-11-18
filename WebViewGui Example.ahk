@@ -516,14 +516,32 @@ SendRawKey(key) {
         return
     }
     
+    ; Handle key combinations like ^t, !t, +t, etc.
+    if (StrLen(key) > 1 && (InStr(key, "^") || InStr(key, "!") || InStr(key, "+") || InStr(key, "#"))) {
+        SendInput("{Blind}" key)
+        return
+    }
+    
     ; Handle single character keys
     if (StrLen(key) = 1) {
         try {
+            ; Check if it's a capital letter (requires Shift)
+            isCapital := (key >= "A" && key <= "Z")
             vk := GetKeyVK(key)
             if (vk) {
-                SendInput("{Blind}{vk" Format("{:02X}", vk) "}")
+                if (isCapital) {
+                    ; For capital letters, send Shift+key
+                    SendInput("{Blind}{vkA0 down}{vk" Format("{:02X}", vk) "}{vkA0 up}")
+                } else {
+                    SendInput("{Blind}{vk" Format("{:02X}", vk) "}")
+                }
             } else {
-                SendInput("{Blind}" key)
+                if (isCapital) {
+                    ; For capital letters, send Shift+key
+                    SendInput("{Blind}+{Blind}" key)
+                } else {
+                    SendInput("{Blind}" key)
+                }
             }
         } catch {
             SendInput("{Blind}" key)
@@ -531,7 +549,7 @@ SendRawKey(key) {
         return
     }
     
-    ; For key combinations like ^t, !t, etc.
+    ; Fallback for any other keys
     SendInput("{Blind}" key)
 }
 ;///////////////////////////////////////////////////////////////////////////////////////////
