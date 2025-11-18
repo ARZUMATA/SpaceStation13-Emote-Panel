@@ -1,0 +1,23 @@
+﻿{
+  "buttonHeight": 30,
+  "buttonHotkey": "t",
+  "buttonHotkeyEmote": "m",
+  "buttonSpacing": 5,
+  "buttonWidth": 170,
+  "sendKeysToGameUseEnter": 1,
+  "isHidden": 0,
+  "window": {
+    "hidden": {
+      "height": 45,
+      "width": 137,
+      "x": 1411,
+      "y": 731
+    },
+    "show": {
+      "height": 635,
+      "width": 1007,
+      "x": 1322,
+      "y": 651
+    }
+  }
+}

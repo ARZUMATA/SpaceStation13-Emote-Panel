@@ -1,0 +1,24 @@
+{
+  "name": "S.P.A.M.",
+  "buttons": [
+    [
+      {
+        "text": "Думать",
+        "command": "ahk_exe notepad.exe",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Бипать",
+        "command": "ahk_exe calc.exe",
+        "style": "btn btn-outline-danger"
+      }
+    ],
+    [
+      {
+        "text": "Бупать",
+        "command": "ahk_exe chrome.exe",
+        "style": "btn btn-success"
+      }
+    ]
+  ]
+}
