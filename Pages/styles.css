@@ -165,3 +165,17 @@ body.ahk-maximized .ahk-title-btn-maximize {
 .title-icon:hover {
     background: rgba(0, 0, 0, .2);
 }
+
+/* Extra SVG icons CSS */
+.white-icon {
+    filter: invert(100%);
+}
+
+/* Or alternatively, if you want to control it with theme */
+[data-bs-theme="dark"] .white-icon {
+    filter: invert(100%);
+}
+
+[data-bs-theme="light"] .white-icon {
+    filter: none;
+}

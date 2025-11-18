@@ -115,25 +115,32 @@
 		<main class="d-flex flex-nowrap">
 			<div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
 				<a href="#" style="margin: 0 auto;" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none" onclick="togglePanel(); return false;">
-					<svg class="bi pe-none" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+					<!-- <svg class="bi pe-none" width="40" height="32"><use xlink:href="#bootstrap"/></svg> -->
+					<img class="bi pe-none white-icon" width="40" height="32" src="svg/bubble.svg">
+
 					<span class="fs-4 nav-text">Hide</span>
 				</a>
 
 				<div class="b-example-divider bg-body-tertiary" style="height:1px;margin:1rem 0;"></div>
 				<ul class="nav nav-pills flex-column mb-auto" role="tablist" aria-orientation="vertical">
 
-					<button class="btn btn-sm btn-primary" id="collapseButton" onclick="collapsePanel(this)" data-toggle="tooltip" title="Collapse Panel">
+					<button class="btn btn-sm btn btn-outline-light" id="collapseButton" onclick="collapsePanel(this)" data-toggle="tooltip" title="Collapse Panel">
 						<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
 						<span class="button-text">Collapse</span>
 					</button>
+
+					<div class="b-example-divider bg-body-tertiary" style="height:1px;margin:0.5rem 0;"></div>
 
 					<li class="nav-item"><a class="nav-link link-body-emphasis active" data-bs-toggle="pill" role="tab" href="#v-pills-home" id="v-pills-home-tab" aria-controls="v-pills-home" aria-selected="true">
 						<svg class="bi pe-none " width="16" height="16"><use xlink:href="#home"/></svg>
 						<span class="nav-text">Home</span></a>
 					</li>
-					<li><a class="nav-link link-body-emphasis" data-bs-toggle="pill" role="tab" href="#v-pills-buttons" id="v-pills-buttons-tab" aria-controls="v-pills-buttons" aria-selected="false">
-						<svg class="bi pe-none " width="16" height="16"><use xlink:href="#speedometer2"/></svg>
-						<span class="nav-text">Buttons</span></a>
+					<li><a class="nav-link link-body-emphasis" data-bs-toggle="pill" role="tab" href="#v-pills-help" id="v-pills-help-tab" aria-controls="v-pills-help" aria-selected="false">
+						<!-- <svg class="bi pe-none " width="16" height="16"><use xlink:href="#speedometer2"/></svg> -->
+
+						<img class="bi pe-none white-icon" width="16" height="16" src="svg/help.svg"">
+
+						<span class="nav-text">Help</span></a>
 					</li>
 				</ul>
 			</div>
@@ -165,8 +172,8 @@
 					</div>
 					<!-- End v-pills-home -->
 					 
-					<!-- v-pills-buttons -->
-					<div class="tab-pane fade" id="v-pills-buttons" role="tabpanel" aria-labelledby="v-pills-buttons-tab">
+					<!-- v-pills-help -->
+					<div class="tab-pane fade" id="v-pills-help" role="tabpanel" aria-labelledby="v-pills-help-tab">
 						<div class="tab-container">
 						<h1>Buttons!</h1>
 
@@ -220,7 +227,7 @@
 					</div>
 
 					</div>
-					<!-- End v-pills-buttons -->
+					<!-- End v-pills-help -->
 
 				</div>
 			</div>
