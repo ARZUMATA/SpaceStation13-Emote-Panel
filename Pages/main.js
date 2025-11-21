@@ -195,9 +195,12 @@ function createCharacterTabPanes() {
                     </button>
                     `;
                 } else {
-                    // Add empty space for alignment
+                    // Add invisible spacer button for alignment
                     buttonsHTML += `
-                    <div style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing / 2}px; display: inline-block;"></div>
+                    <button type="button" 
+                            class="btn btn-primary invisible-btn" 
+                            style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing / 2}px; padding: 0; box-sizing: border-box; visibility: hidden; display: inline-block;">
+                    </button>
                     `;
                 }
             }
