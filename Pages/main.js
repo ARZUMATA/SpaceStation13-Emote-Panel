@@ -406,3 +406,9 @@ function buttonPreviewClick(element) {
         alert("Failed to copy class name to clipboard");
     });
 }
+
+// Disable right-click context menu
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+});
