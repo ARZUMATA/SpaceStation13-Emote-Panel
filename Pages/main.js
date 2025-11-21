@@ -180,14 +180,18 @@ function createCharacterTabPanes() {
                     const btnId = `btn-${index}-${rowIndex}-${colIndex}`;
                     const command = button.command || '';
                     const emote = button.emote ? 'true' : 'false';
+                    
+                    // Check if button is audible
+                    const audibleIcon = button.audible ? '<img class="bi pe-none white-icon" width="16" height="16" src="svg/sound.svg" style="margin-left: 5px; vertical-align: middle;">' : '';
 
                     buttonsHTML += `
                     <button type="button" id="${btnId}" onclick="sendEmoteCommand(this)" 
                             class="${btnStyle}" 
-                            style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing / 2}px; padding: 0; box-sizing: border-box;"
+                            style="width: ${buttonWidth}px; height: ${buttonHeight}px; margin: ${buttonSpacing / 2}px; padding: 0 5px; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;"
                             data-command="${command}"
                             data-emote="${emote}">
-                        ${button.text}
+                        <span style="flex: 1; text-align: center;">${button.text}</span>
+                        ${audibleIcon}
                     </button>
                     `;
                 } else {
