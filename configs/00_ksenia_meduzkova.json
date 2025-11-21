@@ -5,23 +5,41 @@
       {
         "text": "Хихикать",
         "command": "*giggle",
-        "style": "btn btn-custom-ss13-green"
+        "style": "btn btn-custom-ss13-green",
+        "audible": true
       },
       {
         "text": "Смеяться",
         "command": "*laugh",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
+        "style": "btn btn btn-custom-ss13-green",
+        "audible": true
       },
       {
         "text": "Усмехнуться",
         "command": "*chuckle",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
+        "style": "btn btn btn-custom-ss13-green",
+        "audible": true
       },
       {
-        "text": "Булькать",
-        "command": "*gurgle",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
+        "text": "Кричать",
+        "command": "*scream",
+        "style": "btn btn-outline-custom-ss13-dark-blue",
+        "audible": true
       },
+
+      {
+        "text": "Щёлк пальцами",
+        "command": "*snap",
+        "style": "btn btn-primary",
+        "audible": true
+      },
+      {
+        "text": "Свистеть",
+        "command": "*whistle",
+        "style": "btn btn-primary",
+        "audible": true
+      },
+
       {
         "text": "Улыбнуться",
         "command": "*smile",
@@ -37,36 +55,20 @@
         "command": "*frown",
         "style": "btn btn-primary"
       },
+      
+      {
+        "text": "Бледнеть",
+        "command": "*pale",
+        "style": "btn btn-primary"
+      },
+
+  
       {
         "text": "Краснеть",
         "command": "*blush",
         "style": "btn btn-custom-ss13-purple"
       },
-      {
-        "text": "Вздохнуть",
-        "command": "*sigh",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
-      {
-        "text": "Вдохнуть",
-        "command": "*inhale",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
-      {
-        "text": "Глубоко вдохнуть",
-        "command": "*deep",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
-      {
-        "text": "Выдохнуть",
-        "command": "*exhale",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
-      {
-        "text": "Удовлетворённо вздохнуть",
-        "command": "*happy",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
+
       {
         "text": "Ухмыльнуться",
         "command": "*smug",
@@ -81,53 +83,33 @@
       {
         "text": "Хлопать ?",
         "command": "*clap",
-        "style": "btn btn-primary"
+        "style": "btn btn-primary",
+        "audible": true
       },
-      {
-        "text": "Щёлкнуть пальцами",
-        "command": "*snap",
-        "style": "btn btn-primary"
-      },
-      {
-        "text": "Свистеть",
-        "command": "*whistle",
-        "style": "btn btn-primary"
-      },
-      {
-        "text": "Приподнять бровь",
-        "command": "*eyebrow",
-        "style": "btn btn-primary"
-      },
-      {
-        "text": "Прищуриться",
-        "command": "*squint",
-        "style": "btn btn-primary"
-      },
-      {
-        "text": "Дуться",
-        "command": "*sulk",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
-      {
-        "text": "Пялиться",
-        "command": "*stare",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
+
+
       {
         "text": "Фэйспалм",
         "command": "*facepalm",
-        "style": "btn btn-primary"
+        "style": "btn btn-primary",
+        "audible": true
       }
     ],
     [
       {
-        "text": "Кивнуть",
-        "command": "*nod",
-        "style": "btn btn-primary"
+        "text": "Вздохнуть",
+        "command": "*sigh",
+        "style": "btn btn-custom-ss13-dark-blue",
+        "audible": true
       },
       {
-        "text": "Задыхаться",
-        "command": "*gasp",
+        "text": "Удовлетворённо вздохнуть",
+        "command": "*happy",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Кивнуть",
+        "command": "*nod",
         "style": "btn btn-primary"
       },
       {
@@ -136,77 +118,19 @@
         "style": "btn btn-primary"
       },
       {
-        "text": "Бледнеть",
-        "command": "*pale",
-        "style": "btn btn-primary"
-      },
-      {
-        "text": "Салютовать",
-        "command": "*salute",
-        "style": "btn btn-primary"
-      },
-      {
         "text": "Пожать плечами",
         "command": "*shrug",
         "style": "btn btn-primary"
       },
+
+
+
+
+
       {
-        "text": "Шмыгать носом",
-        "command": "*snuffle",
+        "text": "Салютовать",
+        "command": "*salute",
         "style": "btn btn-primary"
-      },
-      {
-        "text": "Чихнуть",
-        "command": "*sneeze",
-        "style": "btn btn-primary"
-      },
-      {
-        "text": "Хмыкнуть",
-        "command": "*hem",
-        "style": "btn btn-primary"
-      }
-    ],
-    [
-      {
-        "text": "Сдохнуть нахуй",
-        "command": "застывает и падает без сил, её глаза, синий и зеленый, затухают, они мертвы и безжизненны...",
-        "style": "btn btn-custom-ss13-red",
-        "emote": true
-      },
-      {
-        "text": "Предсмертный вздох",
-        "command": "*deathgasp",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
-      {
-        "text": "Плакать",
-        "command": "*cry",
-        "style": "btn btn-primary"
-      },
-      {
-        "text": "Хныкать",
-        "command": "*whimper",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
-      {
-        "text": "Ворчать",
-        "command": "*grumble",
-        "style": "btn btn-primary"
-      },
-      {
-        "text": "Наклонить голову на бок",
-        "command": "*tilt",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
-      {
-        "text": "Ругаться",
-        "command": "*swear",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
-      {
-        "text": "Храпеть",
-        "command": "*snore",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
       },
       {
         "text": "Смотреть",
@@ -234,6 +158,90 @@
         "style": "btn btn-outline-custom-ss13-dark-blue"
       },
       {
+        "text": "Приподнять бровь",
+        "command": "*eyebrow",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Прищуриться",
+        "command": "*squint",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Дуться",
+        "command": "*sulk",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Пялиться",
+        "command": "*stare",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+
+      {
+        "text": "Шмыгать носом",
+        "command": "*snuffle",
+        "style": "btn btn btn-custom-ss13-medium-blue"
+      },
+      {
+        "text": "Чихнуть",
+        "command": "*sneeze",
+        "style": "btn btn btn-custom-ss13-medium-blue",
+        "audible": true
+      },
+      {
+        "text": "Хмыкнуть",
+        "command": "*hem",
+        "style": "btn btn btn-custom-ss13-medium-blue"
+      }
+    ],
+    [
+      {
+        "text": "Сдохнуть нахуй",
+        "command": "застывает и падает без сил, её глаза, синий и зеленый, затухают, они мертвы и безжизненны...",
+        "style": "btn btn-custom-ss13-red",
+        "emote": true
+      },
+      {
+        "text": "deathgasp",
+        "command": "*deathgasp",
+        "style": "btn btn btn-custom-ss13-red",
+        "audible": true
+      },
+      {
+        "text": "Плакать",
+        "command": "*cry",
+        "style": "btn btn-primary",
+        "audible": true
+      },
+      {
+        "text": "Хныкать",
+        "command": "*whimper",
+        "style": "btn btn-primary",
+        "audible": true
+      },
+      {
+        "text": "Ворчать",
+        "command": "*grumble",
+        "style": "btn btn-primary"
+      },
+      {
+        "text": "Наклонить голову на бок",
+        "command": "*tilt",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Ругаться",
+        "command": "*swear",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+      {
+        "text": "Храпеть",
+        "command": "*snore",
+        "style": "btn btn-outline-custom-ss13-dark-blue"
+      },
+
+      {
         "text": "Трястись",
         "command": "*bshake",
         "style": "btn btn-outline-custom-ss13-dark-blue"
@@ -251,6 +259,43 @@
     ],
     [
       {
+        "text": "Задыхаться",
+        "command": "*gasp",
+        "style": "btn btn-primary",
+        "audible": true
+      },
+      {
+        "text": "Подавиться",
+        "command": "*choke",
+        "style": "btn btn-outline-custom-ss13-dark-blue",
+        "audible": true
+      },
+      {
+        "text": "Кашлять",
+        "command": "*cough",
+        "style": "btn btn-outline-custom-ss13-dark-blue",
+        "audible": true
+      },
+      {
+        "text": "Стонать",
+        "command": "*moan",
+        "style": "btn btn-outline-custom-ss13-dark-blue",
+        "audible": true
+      },
+      {
+        "text": "Зевать",
+        "command": "*yawn",
+        "style": "btn btn-outline-custom-ss13-dark-blue",
+        "audible": true
+      },
+
+
+
+
+
+
+
+      {
         "text": "Танцевать",
         "command": "*dance",
         "style": "btn btn-outline-custom-ss13-dark-blue"
@@ -260,25 +305,16 @@
         "command": "*sway",
         "style": "btn btn-outline-custom-ss13-dark-blue"
       },
-      {
-        "text": "Прыгать",
-        "command": "*jump",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
-      {
-        "text": "Подавиться",
-        "command": "*choke",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
+
       {
         "text": "Рухнуть",
         "command": "*collapse",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
+        "style": "btn btn btn-custom-ss13-yellow"
       },
       {
         "text": "Потерять сознание",
         "command": "*faint",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
+        "style": "btn btn btn-custom-ss13-yellow"
       },
       {
         "text": "Кувырок",
@@ -290,11 +326,7 @@
         "command": "*spin",
         "style": "btn btn-outline-custom-ss13-dark-blue"
       },
-      {
-        "text": "Кричать",
-        "command": "*scream",
-        "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
+
       {
         "text": "Дрожать",
         "command": "*shiver",
@@ -319,22 +351,32 @@
         "text": "Болезненно вздохнуть",
         "command": "*groan",
         "style": "btn btn-outline-custom-ss13-dark-blue"
-      },
+      }
+
+    ],
+    [
       {
-        "text": "Кашлять",
-        "command": "*cough",
+        "text": "Вдохнуть",
+        "command": "*inhale",
         "style": "btn btn-outline-custom-ss13-dark-blue"
       },
       {
-        "text": "Стонать",
-        "command": "*moan",
+        "text": "Глубоко вдохнуть",
+        "command": "*deep",
         "style": "btn btn-outline-custom-ss13-dark-blue"
       },
       {
-        "text": "Зевать",
-        "command": "*yawn",
+        "text": "Выдохнуть",
+        "command": "*exhale",
         "style": "btn btn-outline-custom-ss13-dark-blue"
       }
+
+
+
+
+
+
+
     ]
-  ]
+]
 }

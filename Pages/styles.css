@@ -135,10 +135,10 @@ body.ahk-maximized .ahk-title-btn-maximize {
 .tab-pane {
     width: 100%;
 }
-
+/* 
 .tab-container {
     padding: 1em;
-}
+} */
 
 .collapse-panel {
     right: 0;
