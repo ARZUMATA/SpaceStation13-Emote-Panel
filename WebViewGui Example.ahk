@@ -362,11 +362,15 @@ WebButtonClickEvent(button) {
     
     ; Determine which hotkey to send based on emote flag
     hotkeyToSend := isEmote ? buttonHotkeyEmote : buttonHotkey
-    
+
     ; Send the configured hotkey as raw key code
-    SendRawKey(hotkeyToSend)
+    ; SendRawKey(hotkeyToSend)
+
+    ; Send hotkey using direct window messages
+    SendHotkeyToWindow(hotkeyToSend, biggestDialogHWND)
+
     Sleep(100) ; TODO Await dialog window
-    
+
     ; Paste the command using Ctrl+V
     SendInput("^v")  ; Ctrl+V to paste
     OutputDebug("Sent command: " command "`r`n")
@@ -383,6 +387,54 @@ WebButtonClickEvent(button) {
     
     ; Ensure our WebView window stays on top
     WinSetAlwaysOnTop(1, "ahk_id " MyWindow.Hwnd)
+}
+
+SendHotkeyToWindow(hotkey, hwnd) {
+    ; Handle common hotkeys with direct VK codes
+    if (hotkey = "^t" || hotkey = "^T") {
+        ; Ctrl+T - use direct virtual key codes
+        PostMessage(0x100, 0x11, 0x001D0001, , "ahk_id " hwnd)  ; WM_KEYDOWN Ctrl
+        PostMessage(0x100, 0x54, 0x00140001, , "ahk_id " hwnd)  ; WM_KEYDOWN T
+        PostMessage(0x101, 0x54, 0xC0140001, , "ahk_id " hwnd)  ; WM_KEYUP T
+        PostMessage(0x101, 0x11, 0xC01D0001, , "ahk_id " hwnd)  ; WM_KEYUP Ctrl
+    } else if (hotkey = "^m" || hotkey = "^M") {
+        ; Ctrl+M - use direct virtual key codes
+        PostMessage(0x100, 0x11, 0x001D0001, , "ahk_id " hwnd)  ; WM_KEYDOWN Ctrl
+        PostMessage(0x100, 0x4D, 0x00320001, , "ahk_id " hwnd)  ; WM_KEYDOWN M
+        PostMessage(0x101, 0x4D, 0xC0320001, , "ahk_id " hwnd)  ; WM_KEYUP M
+        PostMessage(0x101, 0x11, 0xC01D0001, , "ahk_id " hwnd)  ; WM_KEYUP Ctrl
+    } else {
+        ; Fallback to SendInput with explicit VK codes
+        SendRawVK(hotkey)
+    }
+}
+
+SendRawVK(hotkey) {
+    ; Map common keys to VK codes for US English layout
+    static vkMap := Map(
+        "a", 0x41, "b", 0x42, "c", 0x43, "d", 0x44, "e", 0x45, "f", 0x46, "g", 0x47,
+        "h", 0x48, "i", 0x49, "j", 0x4A, "k", 0x4B, "l", 0x4C, "m", 0x4D, "n", 0x4E,
+        "o", 0x4F, "p", 0x50, "q", 0x51, "r", 0x52, "s", 0x53, "t", 0x54, "u", 0x55,
+        "v", 0x56, "w", 0x57, "x", 0x58, "y", 0x59, "z", 0x5A,
+        "0", 0x30, "1", 0x31, "2", 0x32, "3", 0x33, "4", 0x34, "5", 0x35, "6", 0x36,
+        "7", 0x37, "8", 0x38, "9", 0x39
+    )
+    
+    ; Handle Ctrl combinations
+    if (SubStr(hotkey, 1, 1) = "^") {
+        keyChar := SubStr(hotkey, 2, 1)
+        if (vkMap.Has(keyChar)) {
+            vk := vkMap[keyChar]
+            ; Send Ctrl+key using VK codes
+            SendInput("{Blind}{vk11 down}{vk" Format("{:02X}", vk) "}{vk11 up}")
+        }
+    } else if (vkMap.Has(hotkey)) {
+        ; Send single key
+        SendInput("{Blind}{vk" Format("{:02X}", vkMap[hotkey]) "}")
+    } else {
+        ; Fallback
+        SendInput("{Blind}" hotkey)
+    }
 }
 
 WebPanelToggleEvent(action) {
